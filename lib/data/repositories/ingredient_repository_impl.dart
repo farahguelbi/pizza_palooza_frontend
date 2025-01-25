@@ -1,0 +1,52 @@
+import 'package:dartz/dartz.dart';
+import 'package:front/core/errors/failures/failures.dart';
+
+import '../../domain/entities/ingredient.dart';
+import '../../domain/repositories/ingredient_repository.dart';
+import '../datasources/remote_data_source/ingredient_remote_datasource.dart';
+
+class IngredientRepositoryImpl implements IngredientRepository {
+  final IngredientsRemoteDataSource ingredientsRemoteDataSource;
+
+  IngredientRepositoryImpl({required this.ingredientsRemoteDataSource});
+
+   @override
+  Future<Either<Failure, List<Ingredient>>> getAllIngredients() async {
+    try {
+      final ingredients = await ingredientsRemoteDataSource.getAllIngredients();
+      return Right(ingredients);
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
+
+   @override
+  Future<Either<Failure, Ingredient>> getIngredientById(String id) async {
+    try {
+      final ingredient = await ingredientsRemoteDataSource.getIngredientById(id);
+      return Right(ingredient);
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Map<String, List<Ingredient>>>> getIngredientsByLayer() async {
+    try {
+      final ingredients = await ingredientsRemoteDataSource.getAllIngredients();
+      final Map<String, List<Ingredient>> groupedIngredients = {};
+
+      for (var ingredient in ingredients) {
+        final layer = ingredient.layer.value;
+        if (!groupedIngredients.containsKey(layer)) {
+          groupedIngredients[layer] = [];
+        }
+        groupedIngredients[layer]!.add(ingredient);
+      }
+
+      return Right(groupedIngredients);
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
+}

@@ -1,0 +1,31 @@
+import '../../domain/entities/wishlist.dart';
+
+class WishlistModel extends Wishlist {
+ WishlistModel({
+    required String id,
+    required String userId,
+    required List<String> pizzaIds,
+  }) : super(
+          id: id,
+          userId: userId,
+          pizzaIds: pizzaIds,
+        );
+
+  /// Convertir un JSON en une instance de `WishlistModel`
+  factory WishlistModel.fromJson(Map<String, dynamic> json) {
+    return WishlistModel(
+      id: json['_id'],
+      userId: json['userID'],
+      pizzaIds: List<String>.from(json['pizzas'] ?? []),
+    );
+  }
+
+  /// Convertir une instance de `WishlistModel` en JSON
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'userID': userId,
+      'pizzas': pizzaIds,
+    };
+  }
+}
