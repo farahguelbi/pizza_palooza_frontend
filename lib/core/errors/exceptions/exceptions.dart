@@ -36,5 +36,12 @@ class BadRequestException implements Exception {
   @override
   String toString() => message ?? "Bad request occurred.";
 }
+class ParsingException implements Exception {
+  final String? message;
+  ParsingException({this.message});
+
+  @override
+  String toString() => message ?? "An error occurred while parsing the data.";
+}
 
 class LocalStorageException implements Exception {}

@@ -34,7 +34,7 @@ class PizzaRepositoryImpl implements PizzaRepository {
     }
   }
 
-@override
+/*@override
 Future<Either<Failure, Unit>> createPizza(Pizza pizza) async {
   try {
     final pizzaModel = PizzaModel(
@@ -72,7 +72,7 @@ Future<Either<Failure, Unit>> createPizza(Pizza pizza) async {
   }
 }
 
-
+*/
   @override
   Future<Either<Failure, List<Pizza>>> getPizzaByType(String type) async {
     try {
@@ -92,4 +92,12 @@ Future<Either<Failure, Unit>> createPizza(Pizza pizza) async {
       return Left(ServerFailure());
     }
   }
+  
+  @override
+  Future<Either<Failure, Unit>> createPizza(Pizza pizza) {
+    // TODO: implement createPizza
+    throw UnimplementedError();
+  }
+  
+
 }

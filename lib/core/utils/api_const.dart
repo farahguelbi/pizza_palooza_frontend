@@ -24,6 +24,8 @@ class ApiConst {
   static const addToWishlist = '$baseUrl/wishlist/add';
   static const removeFromWishlist = '$baseUrl/wishlist/remove';
   static String getWishlist  (String userId) => '$baseUrl/wishlist/$userId';
+  static const createWishList = '$baseUrl/wishList/create';
+
 
   // Ingredient APIs
   static const getAllIngredients = '$baseUrl/ingredients';

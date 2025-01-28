@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:front/presentation/screens/controller/authentification_controller.dart';
-import 'package:front/presentation/screens/screens/update_password.dart';
-import 'package:front/presentation/screens/screens/view_profile.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/screens/update_password.dart';
+import 'package:front/presentation/screens/view_profile.dart';
 import 'package:get/get.dart';
 
 class CustomDrawer extends StatelessWidget {

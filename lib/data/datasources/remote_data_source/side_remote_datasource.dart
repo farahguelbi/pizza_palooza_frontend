@@ -8,18 +8,18 @@ import '../../models/side_model.dart';
 abstract class SideRemoteDataSource {
   Future<List<SideModel>> getAllSides();
   Future<SideModel> getSideById(String id);
-  Future<void> createSide(Map<String, dynamic> sideData);
-  Future<void> deleteSide(String id);
+
 }
 
 class SideRemoteDataSourceImpl implements SideRemoteDataSource {
-  final http.Client client;
+  SideRemoteDataSourceImpl();
 
-  SideRemoteDataSourceImpl({required this.client});
 
-  @override
+ @override
   Future<List<SideModel>> getAllSides() async {
-    final response = await client.get(
+        print('SideRepositoryImpl: Calling SideRemoteDataSource...');
+
+    final response = await http.get(
       Uri.parse(ApiConst.getAllSides),
       headers: {'Content-Type': 'application/json'},
     );
@@ -34,7 +34,7 @@ class SideRemoteDataSourceImpl implements SideRemoteDataSource {
 
   @override
   Future<SideModel> getSideById(String id) async {
-    final response = await client.get(
+    final response = await http.get(
       Uri.parse(ApiConst.getSideById(id)),
       headers: {'Content-Type': 'application/json'},
     );
@@ -47,28 +47,28 @@ class SideRemoteDataSourceImpl implements SideRemoteDataSource {
     }
   }
 
-  @override
-  Future<void> createSide(Map<String, dynamic> sideData) async {
-    final response = await client.post(
-      Uri.parse(ApiConst.createSide),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(sideData),
-    );
+  // @override
+  // Future<void> createSide(Map<String, dynamic> sideData) async {
+  //   final response = await http.post(
+  //     Uri.parse(ApiConst.createSide),
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: json.encode(sideData),
+  //   );
 
-    if (response.statusCode != 201) {
-      throw ServerException();
-    }
-  }
+  //   if (response.statusCode != 201) {
+  //     throw ServerException();
+  //   }
+  // }
 
-  @override
-  Future<void> deleteSide(String id) async {
-    final response = await client.delete(
-      Uri.parse(ApiConst.deleteSide(id)),
-      headers: {'Content-Type': 'application/json'},
-    );
+  // @override
+  // Future<void> deleteSide(String id) async {
+  //   final response = await http.delete(
+  //     Uri.parse(ApiConst.deleteSide(id)),
+  //     headers: {'Content-Type': 'application/json'},
+  //   );
 
-    if (response.statusCode != 200) {
-      throw ServerException();
-    }
-  }
+  //   if (response.statusCode != 200) {
+  //     throw ServerException();
+  //   }
+  // }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:front/presentation/screens/controller/authentification_controller.dart';
-import 'package:front/presentation/screens/widget/custom_text_field.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/widget/custom_text_field.dart';
 import 'package:get/get.dart';
 
 class ForgetPassword extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:front/presentation/screens/controller/authentification_controller.dart';
-import 'package:front/presentation/screens/screens/edit_profile_screen.dart';
-import 'package:front/presentation/screens/widget/profile_input.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/screens/edit_profile_screen.dart';
+import 'package:front/presentation/widget/profile_input.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 

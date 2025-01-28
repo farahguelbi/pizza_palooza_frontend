@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/di.dart';
-import 'package:front/presentation/screens/screens/SignUp_page.dart';
-import 'package:front/presentation/screens/screens/login_page.dart';
+import 'package:front/presentation/screens/SignUp_page.dart';
+import 'package:front/presentation/screens/login_page.dart';
 import 'package:get/get.dart';
 
 class Page2 extends StatefulWidget {

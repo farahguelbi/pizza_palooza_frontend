@@ -8,7 +8,7 @@ class Sale extends Equatable {
   final String userId;
   final double totalPrice; 
   final List<SaleSide> sides; 
-
+ 
 
 const Sale({
     required this.id,

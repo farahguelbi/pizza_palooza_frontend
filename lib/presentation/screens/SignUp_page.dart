@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:front/presentation/screens/controller/authentification_controller.dart';
-import 'package:front/presentation/screens/widget/custom_text_field.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/widget/custom_text_field.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class SignupPage extends StatefulWidget {

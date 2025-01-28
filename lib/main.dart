@@ -1,11 +1,12 @@
 import 'package:front/core/l10n/l10n.dart';
-import 'package:front/presentation/screens/screens/page1.dart';
+import 'package:front/presentation/screens/page1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'di.dart'as di;
 void main()async{
+
   await  di.init();
   runApp(const MyApp());
   

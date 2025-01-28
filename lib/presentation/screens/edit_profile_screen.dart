@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:front/core/utils/string_const.dart';
-import 'package:front/presentation/screens/controller/authentification_controller.dart';
-import 'package:front/presentation/screens/widget/change_profil_image_dialog.dart';
-import 'package:front/presentation/screens/widget/custom_text_field.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/widget/change_profil_image_dialog.dart';
+import 'package:front/presentation/widget/custom_text_field.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 

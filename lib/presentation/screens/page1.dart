@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:front/domain/usecases/user_usecases/get_user_by_id.dart';
-import 'package:front/presentation/screens/screens/main_page.dart';
+import 'package:front/presentation/controller/wishlist_controller.dart';
+import 'package:front/presentation/screens/main_page.dart';
+import '../controller/side_controller.dart';
 import 'page2.dart';
 import 'SignUp_page.dart';
 import 'login_page.dart';
 import 'package:front/domain/usecases/user_usecases/auto_login.dart';
-import 'package:front/presentation/screens/controller/authentification_controller.dart';
-import 'package:front/presentation/screens/screens/Home_pizza_Screen.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/screens/Home_pizza_Screen.dart';
 import 'package:front/di.dart';
 import 'package:get/get.dart';
 
 class Page1 extends StatelessWidget {
+  
  // Define a nullable Future
   Future<bool> _autoLogin(BuildContext context) async {
     bool isLoggedIn = true;
-
     // Initialize the authentication controller
     Get.put(AuthenticationController());
     final AuthenticationController authController = Get.find();
+    
+    Get.put(WishlistController());
+
 
     // Perform the auto-login logic
  final autoLoginResult = await AutoLoginUsecase(sl()).call();

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:front/presentation/screens/screens/AddScreen.dart';
-import 'package:front/presentation/screens/screens/CartScreen.dart';
-import 'package:front/presentation/screens/screens/Home_pizza_Screen.dart';
-import 'package:front/presentation/screens/screens/whishlist_screen.dart';
-import 'package:front/presentation/screens/widget/custom_bottom_nav_bar.dart';
+import 'package:front/presentation/screens/AddScreen.dart';
+import 'package:front/presentation/screens/AddScreen.dart';
+import 'package:front/presentation/screens/CartScreen.dart';
+import 'package:front/presentation/screens/Home_pizza_Screen.dart';
+import 'package:front/presentation/screens/whishlist_screen.dart';
+import 'package:front/presentation/widget/custom_bottom_nav_bar.dart';
 
 
 class MainPage extends StatefulWidget {
@@ -19,7 +20,7 @@ class _MainPageState extends State<MainPage> {
   // List of pages to display based on the selected index
   final List<Widget> _pages = [
     HomeScreen(),
-    WishlistScreen(),
+    WishlistPage(),
     Addscreen(),
     Cartscreen(),
   ];

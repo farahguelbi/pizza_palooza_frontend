@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:front/presentation/screens/controller/authentification_controller.dart';
-import 'package:front/presentation/screens/controller/pizza_controller.dart';
-import 'package:front/presentation/screens/screens/edit_profile_screen.dart';
-import 'package:front/presentation/screens/screens/login_page.dart';
-import 'package:front/presentation/screens/widget/app_bar.dart';
-import 'package:front/presentation/screens/widget/drawer_widget.dart';
-import 'package:front/presentation/screens/widget/pizza_item.dart';
-import 'package:front/presentation/screens/widget/search_input.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/controller/pizza_controller.dart';
+import 'package:front/presentation/screens/edit_profile_screen.dart';
+import 'package:front/presentation/screens/login_page.dart';
+import 'package:front/presentation/widget/app_bar.dart';
+import 'package:front/presentation/widget/drawer_widget.dart';
+import 'package:front/presentation/widget/pizza_item.dart';
+import 'package:front/presentation/widget/search_input.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 @override
   void initState() {
     super.initState();
-    pizzaController.getAllpizzas(); // Charger les pizzas dès le démarrage
+    pizzaController.getAllpizzas(); 
   }
   @override
   Widget build(BuildContext context) {
@@ -44,6 +44,22 @@ class _HomeScreenState extends State<HomeScreen> {
             
           ),
           const SizedBox(height: 20,),
+           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.asset(
+                "assets/images/pizza-sale.jpg", 
+                fit: BoxFit.cover,
+                width: double.infinity,
+                
+                height: 150,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
  Expanded(
             child: GetBuilder<PizzaController>(
               builder: (controller) {
@@ -56,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (controller.allPizzas.isEmpty) {
                   return const Center(
                     child: Text(
-                      "No pizzas availa!",
+                      "No pizzas available!",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   );

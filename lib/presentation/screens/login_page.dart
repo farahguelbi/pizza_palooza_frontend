@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:front/presentation/screens/controller/authentification_controller.dart';
-import 'package:front/presentation/screens/screens/SignUp_page.dart';
-import 'package:front/presentation/screens/screens/forget_password.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/screens/SignUp_page.dart';
+import 'package:front/presentation/screens/forget_password.dart';
 import 'package:get/get.dart';
 
 class LoginPage extends StatefulWidget {
