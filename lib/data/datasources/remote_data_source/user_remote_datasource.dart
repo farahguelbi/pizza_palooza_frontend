@@ -9,7 +9,7 @@ import 'package:front/data/models/token_model.dart';
 import 'package:front/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http_parser/http_parser.dart';
 
 
@@ -103,7 +103,7 @@ Future<String> registerUser({
      String? gender,
   }) async {
     try {
-      AppLocalizations t=await AppLocalizations.delegate.load(Locale(await locale) );
+      // AppLocalizations t=await AppLocalizations.delegate.load(Locale(await locale) );
       final response = await http.post(
         Uri.parse(ApiConst.RegisterUser),
         headers: {'Content-Type': 'application/json'},
@@ -114,7 +114,7 @@ Future<String> registerUser({
           'password': password,
           'address': address??'',
           'phone': phone??'',
-          'image': image??'',
+          'imageUrl': image??'',
           'birthDate': birthDate?.toIso8601String(),
           'gender': gender??'',
         }),

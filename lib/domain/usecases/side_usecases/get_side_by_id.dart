@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:front/core/errors/failures/failures.dart';
+import 'package:front/domain/repositories/sides_repository.dart';
 
 import '../../entities/sides.dart';
-import '../../repositories/side_repository.dart';
 
 class GetSideById {
-  final SideRepository repository;
+  final SidesRepository repository;
 
   GetSideById(this.repository);
   

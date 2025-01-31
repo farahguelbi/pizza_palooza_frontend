@@ -51,7 +51,6 @@ class ApiConst {
   // Pizza APIs
 static const String getAllPizzas = '$baseUrl/pizzas';
 static const String getPizzaById = '$baseUrl/pizzas';
-static const String createPizza = '$baseUrl/pizzas';
 static String getPizzaByType(String type) => '$baseUrl/pizzas/type/$type';
 static String searchPizzas(String name) => '$baseUrl/pizzas/search/$name';
 
@@ -60,15 +59,22 @@ static String searchPizzas(String name) => '$baseUrl/pizzas/search/$name';
 static const String getAllSides = '$baseUrl/sides';
 static String getSideById(String id) => '$baseUrl/sides/$id';
 static const String createSide = '$baseUrl/sides';
+
 static String deleteSide(String id) => '$baseUrl/sides/$id';
 
  // Sale APIs
 static const String createSale = '$baseUrl/sales/create';
-  static const String getAllSales = '$baseUrl/sales';
-  static String getSaleById(String id) => '$baseUrl/sales/$id';
-  static String updateSale(String id) => '$baseUrl/sales/update/$id';
-  static String deleteSale(String id) => '$baseUrl/sales/delete/$id';
+static const String getAllSales = '$baseUrl/sales';
+static const String AddMultipleSides = '$baseUrl/sales/add-sides';
+static String getSaleById(String id) => '$baseUrl/sales/$id';
+static String updateSale ='$baseUrl/sales/update';
+static String deleteSale(String id) => '$baseUrl/sales/delete/$id';
 
   // Type APIs
 static String getTypeById(String id) => '$baseUrl/types/$id';
+//customPizza
+  static const getAllCustomPizzas = '$baseUrl/pizzaCustom';
+  static const  getCustomPizzaById ='$baseUrl/pizzaCustom';
+  static const  createPizza ='$baseUrl/pizzaCustom/create';
+
 }

@@ -3,8 +3,8 @@ import 'package:front/presentation/screens/page1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'di.dart'as di;
+
 void main()async{
 
   await  di.init();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget{
           debugShowCheckedModeBanner: false,
             locale: Locale('fr'), // ?? Locale('fr'),
             localizationsDelegates: const [
-              AppLocalizations.delegate,
+              // AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

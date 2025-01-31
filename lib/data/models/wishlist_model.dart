@@ -7,7 +7,7 @@ class WishlistModel extends Wishlist {
  WishlistModel({
     required String id,
     required String userId,
-    required List<Pizza> pizzas,
+    required List<PizzaModel> pizzas,
     // required List<String> pizzaIds,
 
   }) : super(

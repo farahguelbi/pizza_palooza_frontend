@@ -85,7 +85,10 @@
 //   }
 
 // }
+import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:front/domain/usecases/wishlist_usecases/create_wishlist.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
 import 'package:get/get.dart';
 import '../../domain/entities/wishlist.dart';
 import '../../di.dart';
@@ -99,6 +102,7 @@ class WishlistController extends GetxController {
   Wishlist? userWishlist;
   bool isLoading = false;
   String errorMessage = '';
+
 
 //create wishlist 
 
@@ -210,4 +214,69 @@ class WishlistController extends GetxController {
     if (userId == null) return null;
     return userWishlist?.id;
   }
+   /// Vérifie si la pizza est dans la wishlist (synchronisation avec le backend)
+  bool checkWishlistStatus(String id) {
+    final WishlistController wishlistController = Get.find();
+    final AuthenticationController authenticationController = Get.find();
+    final String? currentUserId = authenticationController.currentUser?.id;
+
+    if (currentUserId != null) {
+      wishlistController.getWishlistByUserId(currentUserId).then((success) {
+        if (success && wishlistController.userWishlist != null) {
+          // Synchronise l'état local avec la liste du backend
+           return  wishlistController.userWishlist!.pizzas
+                .contains(id);
+        
+        }
+        
+      }
+      );
+    }
+    return false;
+  }
+
+  /// Gère l'ajout ou la suppression de la pizza dans la wishlist
+  void toggleFavorite(BuildContext context,String id) async {
+    final WishlistController wishlistController = Get.find();
+    final AuthenticationController authenticationController = Get.find();
+    final String? currentUserId = authenticationController.currentUser?.id;
+
+    if (currentUserId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please log in to manage your wishlist')),
+      );
+      return;
+  
+    }
+
+    // // Inverse l'état local
+    // bool newWishlistState = !isInWishlist;
+    // setState(() {
+    //   isInWishlist =
+    //       newWishlistState; 
+    // });
+
+    // Effectue l'ajout ou la suppression
+    final success = checkWishlistStatus(id)
+        ? await wishlistController.addPizzaToWishlist(
+            currentUserId,id)
+        : await wishlistController.removePizzaFromWishlist(
+            currentUserId, id);
+
+    // Si l'opération échoue, réinitialise l'état local
+  //   if (!success) {
+  //     setState(() {
+  //       isInWishlist = !isInWishlist;
+  //     });
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Failed to update wishlist')),
+  //     );
+  //   }
+
+  //   // Ajoutez des journaux pour déboguer
+  //   print(isInWishlist
+  //       ? 'Pizza added to wishlist: ${.id}'
+  //       : 'Pizza removed from wishlist: ${widget.pizza.id}');
+  // }
+}
 }

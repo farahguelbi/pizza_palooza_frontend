@@ -12,15 +12,15 @@ import 'package:dartz/dartz.dart';
     required String userID,
     required String pizzaId,
     required int quantityPizza,
-    required List<String> sides,
-    required List<int> quantitiesSides,
+    // required List<String> sides,
+    // required List<int> quantitiesSides,
   }) async {
     return await repository.createSale(
       userID: userID,
       pizzaId: pizzaId,
       quantityPizza: quantityPizza,
-      sides: sides,
-      quantitiesSides: quantitiesSides,
+      // sides: sides,
+      // quantitiesSides: quantitiesSides,
     );
   }
 }

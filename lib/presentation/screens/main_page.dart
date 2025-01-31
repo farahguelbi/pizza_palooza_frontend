@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     HomeScreen(),
     WishlistPage(),
-    Addscreen(),
+    AddScreen(),
     Cartscreen(),
   ];
   void _onTap(int index) {

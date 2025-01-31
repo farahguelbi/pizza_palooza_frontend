@@ -3,6 +3,7 @@ import 'package:front/di.dart';
 import 'package:front/domain/entities/pizza.dart';
 import 'package:front/domain/usecases/pizza_usecases/get_all_pizzas.dart';
 import 'package:front/domain/usecases/pizza_usecases/get_pizza_by_id.dart';
+import 'package:front/domain/usecases/pizza_usecases/search_pizzas.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class PizzaController extends GetxController {
@@ -62,6 +63,39 @@ class PizzaController extends GetxController {
 
   }
 
+   Future<void> searchPizzas(String name) async {
+    print("🔍 searchPizzas() called with: $name"); // ✅ Debugging line
+
+    if (name.isEmpty) {
+      pizzasList = allPizzas;
+      msg = '';
+      update();
+      print("🔄 Reset search. Showing all pizzas."); // ✅ Debugging line
+      return;
+    }
+
+    isLoading = true;
+    update();
+    
+    final res = await SearchPizzas(sl())(name);
+    isLoading = false;
+
+    res.fold(
+      (failure) {
+        msg = 'No pizzas found';
+        
+        pizzasList = [];
+        update();
+        print("❌ No pizzas found for: $name"); // ✅ Debugging line
+      },
+      (pizzas) {
+        pizzasList = pizzas;
+        msg = '';
+        update();
+        print("✅ Found ${pizzas.length} pizzas for: $name"); // ✅ Debugging line
+      },
+    );
+  }
 
   
 }

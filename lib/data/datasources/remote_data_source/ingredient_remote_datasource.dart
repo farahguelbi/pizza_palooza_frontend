@@ -20,11 +20,16 @@ class IngredientsRemoteDataSourceImpl implements IngredientsRemoteDataSource {
       Uri.parse(ApiConst.getAllIngredients),
       headers: {'Content-Type': 'application/json'},
     );
-
+ print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
+          print('Parsed JSON: $jsonResponse');
+
       return jsonResponse.map((data) => IngredientModel.fromJson(data)).toList();
     } else {
+          print('ServerException: ${response.body}');
+
       throw ServerException();
     }
   }

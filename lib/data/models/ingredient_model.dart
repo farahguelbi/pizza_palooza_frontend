@@ -6,34 +6,34 @@ class IngredientModel extends Ingredient {
     required String name,
     required double price,
     required String image,
-    required IngredientLayer layer,
+    // required IngredientLayer layer,
   }) : super(
           id: id,
           name: name,
           price: price,
           image: image,
-          layer: layer,
+          // layer: layer,
         );
 
   /// Méthode pour convertir un JSON en une instance de `IngredientModel`
   factory IngredientModel.fromJson(Map<String, dynamic> json) {
     return IngredientModel(
-      id: json['id'],
-      name: json['name'],
+      id: json['id']??'',
+      name: json['name'] ?? 'Unknown',
+      image: json['image']??'',
+
       price: (json['price'] as num).toDouble(),
-      image: json['image'],
-      layer: IngredientLayerExtension.fromValue(json['layer']),
+      // layer: IngredientLayerExtension.fromValue(json['layer']),
     );
   }
 
-  /// Méthode pour convertir une instance de `IngredientModel` en JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'price': price,
       'image': image,
-      'layer': layer.value,
+      // 'layer': layer.value,
     };
   }
 }

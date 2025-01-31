@@ -12,54 +12,149 @@ class SideScreen extends StatefulWidget {
 
 class _SideScreenState extends State<SideScreen> {
   late SideController sideController;
+  double totalPrice = 0.0;
+  Map<String, int> quantities = {};
 
   @override
   void initState() {
     super.initState();
-    // Obtenir une instance du contrôleur enregistrée dans GetX
     sideController = Get.find<SideController>();
     print('SideController initialized in SideScreen');
-
-    // Récupérer tous les sides au démarrage
     sideController.getAllsides();
+  }
+
+  /// Increment side quantity and update total price
+  void incrementSide(Side side) {
+    setState(() {
+      quantities[side.id] = (quantities[side.id] ?? 0) + 1;
+      totalPrice += side.price;
+    });
+  }
+
+  /// Decrement side quantity and update total price
+  void decrementSide(Side side) {
+    if (quantities[side.id] != null && quantities[side.id]! > 0) {
+      setState(() {
+        quantities[side.id] = quantities[side.id]! - 1;
+        totalPrice -= side.price;
+      });
+    }
+  }
+
+  /// Handle "Order Now" button press
+  void orderNow() {
+   
+
+    print("Order placed: $quantities");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Order placed! Total: \$${totalPrice.toStringAsFixed(2)}")),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFB17C46), // Background color
       appBar: AppBar(
-        title: const Text("Choose Sides"),
         backgroundColor: const Color(0xFF790303),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+       
       ),
-      body: GetBuilder<SideController>(
-        builder: (controller) {
-          // Chargement
-          if (controller.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          // Erreur
-          if (controller.msg.isNotEmpty) {
-            return Center(
-              child: Text(
-                controller.msg,
-                style: const TextStyle(fontSize: 18, color: Colors.black),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Title
+              const Text(
+                'Add Sides',
+                style: TextStyle(
+                  fontFamily: 'Yellowtail',
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF790303),
+                ),
               ),
-            );
-          }
+              const SizedBox(height: 20),
 
-          // Liste des sides
-          return ListView.builder(
-            padding: const EdgeInsets.all(8.0),
-            itemCount: controller.AllSides.length,
-            itemBuilder: (context, index) {
-              final side = controller.AllSides[index];
-              return SideCart(side: side); // Affiche chaque side avec SideCart
-            },
-          );
-        },
+              // Sides List
+              GetBuilder<SideController>(
+                builder: (controller) {
+                  if (controller.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (controller.msg.isNotEmpty) {
+                    return Center(
+                      child: Text(
+                        controller.msg,
+                        style: const TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: controller.AllSides.map((side) {
+                      return SideCart(
+                        side: side,
+                        onIncrement: () => incrementSide(side),
+                        onDecrement: () => decrementSide(side),
+                        quantity: quantities[side.id] ?? 0,
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+
+              // Total Price
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "Total Price: \$${totalPrice.toStringAsFixed(2)}",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Lobster',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // "Order Now" Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: orderNow,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF790303),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Text(
+                      'Order Now',
+                      style: TextStyle(
+                        fontSize: 21,
+                        fontFamily: 'Roboto',
+                        color: Color(0xFFD8CAB8),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -67,8 +162,17 @@ class _SideScreenState extends State<SideScreen> {
 
 class SideCart extends StatelessWidget {
   final Side side;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
+  final int quantity;
 
-  const SideCart({Key? key, required this.side}) : super(key: key);
+  const SideCart({
+    Key? key,
+    required this.side,
+    required this.onIncrement,
+    required this.onDecrement,
+    required this.quantity,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,11 +180,11 @@ class SideCart extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFD9D9D9).withOpacity(0.8),
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.black12,
               spreadRadius: 2,
               blurRadius: 5,
               offset: const Offset(0, 3),
@@ -88,34 +192,33 @@ class SideCart extends StatelessWidget {
           ],
         ),
         child: ListTile(
-          leading: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-         
-          ),
           title: Text(
             side.name,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: 18,
             ),
           ),
           subtitle: Text(
             "\$${side.price.toStringAsFixed(2)}",
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
+            style: const TextStyle(color: Colors.black54, fontSize: 14),
           ),
-          trailing: IconButton(
-            icon: const Icon(Icons.add_circle, color: Colors.red),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("${side.name} added to cart"),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-            },
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.remove_circle, color: Color(0xFF790303)),
+                onPressed: quantity > 0 ? onDecrement : null,
+              ),
+              Text(
+                "$quantity",
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: const Icon(Icons.add_circle, color: Color(0xFF790303)),
+                onPressed: onIncrement,
+              ),
+            ],
           ),
         ),
       ),

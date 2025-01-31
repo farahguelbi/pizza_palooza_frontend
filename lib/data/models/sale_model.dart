@@ -25,6 +25,7 @@ class SaleModel extends Sale {
       pizzaQuantity: json['quantitypizza'] ?? 0,
       userId: json['userId'] ?? '',
       totalPrice: (json['totalprice'] as num?)?.toDouble() ?? 0.0,
+      
       sides: (json['sides'] as List<dynamic>? ?? [])
           .map((sideJson) => SaleSideModel.fromJson(sideJson))
           .toList(),

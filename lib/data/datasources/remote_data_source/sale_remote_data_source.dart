@@ -12,8 +12,9 @@ abstract class SaleRemoteDataSource {
   Future<SaleModel> createSale(Map<String, dynamic> saleData);
   Future<List<SaleModel>> getAllSales();
   Future<SaleModel> getSaleById(String id);
-  Future<void> updateSale(String id, Map<String, dynamic> saleData);
+  Future<void> updateSale( Map<String, dynamic> saleData);
   Future<void> deleteSale(String id);
+
 }
 
 class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
@@ -74,9 +75,9 @@ class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
   }
 
   @override
-  Future<void> updateSale(String id, Map<String, dynamic> saleData) async {
-    final response = await http.put(
-      Uri.parse(ApiConst.updateSale(id)),
+  Future<void> updateSale( Map<String, dynamic> saleData) async {
+    final response = await http.post(
+      Uri.parse(ApiConst.updateSale),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(saleData),
     );
@@ -97,6 +98,7 @@ class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
       throw ServerException();
     }
   }
+
 }
 
 

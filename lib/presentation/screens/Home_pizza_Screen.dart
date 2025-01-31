@@ -8,6 +8,8 @@ import 'package:front/presentation/widget/drawer_widget.dart';
 import 'package:front/presentation/widget/pizza_item.dart';
 import 'package:front/presentation/widget/search_input.dart';
 import 'package:get/get.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +20,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
     final PizzaController pizzaController = Get.put(PizzaController());
+    final TextEditingController _searchController = TextEditingController();
+
+     final List<String> carouselImages = [
+    "assets/images/carrousel_part1.jpg",
+    "assets/images/carrousel_part2.jpg",
+    "assets/images/carrousel_part3.jpg"
+  ];
+  int currentSlideIndex = 0;
 @override
   void initState() {
     super.initState();
@@ -38,27 +48,65 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-               const Padding(
+                Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0), 
-            child: SearchInput(), 
-            
+ child: SearchInput(
+              controller: _searchController,
+              onChanged: pizzaController.searchPizzas, // Calls search function
+            ),            
           ),
           const SizedBox(height: 20,),
-           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.asset(
-                "assets/images/pizza-sale.jpg", 
-                fit: BoxFit.cover,
-                width: double.infinity,
-                
-                height: 150,
-              ),
+         // Carousel slider
+          CarouselSlider(
+            options: CarouselOptions(
+              height: 200.0, // Height of the carousel
+              autoPlay: true,
+              enlargeCenterPage: true,
+              autoPlayInterval: const Duration(seconds: 3),
+              onPageChanged: (index, reason) {
+                setState(() {
+                  currentSlideIndex = index; // Update the current slide index
+                });
+              },
             ),
+            items: carouselImages.map((imagePath) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(
+                      imagePath,
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width,
+                    ),
+                  );
+                },
+              );
+            }).toList(),
           ),
-
+          const SizedBox(height: 10),
+          // Dots as indicators
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: carouselImages.asMap().entries.map((entry) {
+              return GestureDetector(
+                onTap: () => setState(() {
+                  currentSlideIndex = entry.key;
+                }),
+                child: Container(
+                  width: 10.0,
+                  height: 10.0,
+                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: currentSlideIndex == entry.key
+                        ? Colors.white
+                        : Colors.grey,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
           const SizedBox(height: 20),
  Expanded(
             child: GetBuilder<PizzaController>(

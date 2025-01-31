@@ -22,6 +22,8 @@ class Page1 extends StatelessWidget {
     final AuthenticationController authController = Get.find();
     
     Get.put(WishlistController());
+        Get.put(SideController());
+
 
 
     // Perform the auto-login logic

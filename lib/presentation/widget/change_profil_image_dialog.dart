@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:front/core/utils/string_const.dart';
 import 'package:front/presentation/controller/authentification_controller.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 
@@ -30,7 +30,7 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
       builder:(controller) {
 
         return AlertDialog(
-      title:  Text(AppLocalizations.of(context)!.update_profile_picture),
+      title:  Text("update_profile_picture"),
       titleTextStyle: const TextStyle(fontWeight: FontWeight.bold,color:Colors.black,fontSize: 20),
       backgroundColor: Colors.white,
       shape:const RoundedRectangleBorder(
@@ -65,7 +65,7 @@ actionsPadding: const EdgeInsets.symmetric(horizontal:20,vertical: 10),
   actions: [
     TextButton(onPressed: (){
           Navigator.of(context).pop();
-        }, child: Text(AppLocalizations.of(context)!.cancel)),
+        }, child: Text("cancel")),
         ElevatedButton(
                           onPressed:()async{
                            await controller.updateImage(context);

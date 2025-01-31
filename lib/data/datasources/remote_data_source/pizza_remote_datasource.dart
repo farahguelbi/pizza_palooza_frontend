@@ -106,7 +106,7 @@ class PizzaRemoteDataSourceImpl implements PizzaRemoteDataSource {
   @override
   Future<List<PizzaModel>> searchPizzas(String name) async {
     final response = await http.get(
-      Uri.parse('${ApiConst.getPizzaById}/$name'),
+      Uri.parse(ApiConst.searchPizzas(name)),
       headers: {'Content-Type': 'application/json'},
     );
 

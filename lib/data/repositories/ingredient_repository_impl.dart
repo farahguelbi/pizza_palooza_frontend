@@ -13,9 +13,15 @@ class IngredientRepositoryImpl implements IngredientRepository {
    @override
   Future<Either<Failure, List<Ingredient>>> getAllIngredients() async {
     try {
+          print('Fetching ingredients from remote data source...');
+
       final ingredients = await ingredientsRemoteDataSource.getAllIngredients();
+          print('Fetched ingredients: $ingredients');
+
       return Right(ingredients);
     } catch (e) {
+          print('Error in repository: $e');
+
       return Left(ServerFailure());
     }
   }
@@ -29,8 +35,14 @@ class IngredientRepositoryImpl implements IngredientRepository {
       return Left(ServerFailure());
     }
   }
-
+  
   @override
+  Future<Either<Failure, Map<String, List<Ingredient>>>> getIngredientsByLayer() {
+    // TODO: implement getIngredientsByLayer
+    throw UnimplementedError();
+  }
+
+ /* @override
   Future<Either<Failure, Map<String, List<Ingredient>>>> getIngredientsByLayer() async {
     try {
       final ingredients = await ingredientsRemoteDataSource.getAllIngredients();
@@ -48,5 +60,5 @@ class IngredientRepositoryImpl implements IngredientRepository {
     } catch (e) {
       return Left(ServerFailure());
     }
-  }
+  }*/
 }
