@@ -18,7 +18,7 @@ class IngredientModel extends Ingredient {
   /// Méthode pour convertir un JSON en une instance de `IngredientModel`
   factory IngredientModel.fromJson(Map<String, dynamic> json) {
     return IngredientModel(
-      id: json['id']??'',
+      id: json['_id']??'',
       name: json['name'] ?? 'Unknown',
       image: json['image']??'',
 

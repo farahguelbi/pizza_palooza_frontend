@@ -2,7 +2,7 @@
 
 
 class ApiConst {
-  static const baseUrl = 'http://192.168.1.14:5000/api';
+  static const baseUrl = 'http://192.168.1.18:5000/api';
 
   // Authentication APIs
   static const RegisterUser = '$baseUrl/users/register'; 

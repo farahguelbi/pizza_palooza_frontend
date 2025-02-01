@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
 import 'package:front/presentation/controller/pizza_controller.dart';
 import 'package:get/get.dart';
 import '../controller/ingredient_controller.dart';
@@ -98,13 +99,21 @@ class _AddScreenState extends State<AddScreen> with SingleTickerProviderStateMix
     // Start the animation
     _controller.forward(from: 0);
   }
-
+  double getTotalPrice(){
+    double res = 0;
+    selectedIngredients.forEach((item) {
+      res += ingredientController.allingredients.firstWhere((e)=>e.id == item['ingredient']).price * item['quantity'];
+    });
+    return res +double.parse( selectedPizzaPrices[selectedSize].toString()) ;
+  }
   void _addIngredient(String ingredient) {
+    print(ingredient);
     // Check if the ingredient is already added, and increase the quantity if it is
     bool ingredientExists = false;
     for (var item in selectedIngredients) {
       if (item['ingredient'] == ingredient) {
         item['quantity']++;
+        
         ingredientExists = true;
         break;
       }
@@ -114,15 +123,19 @@ class _AddScreenState extends State<AddScreen> with SingleTickerProviderStateMix
       selectedIngredients.add({'ingredient' : ingredient , 'quantity': 1});
     
 
-    // // Update the total price
+    // Update the total price
     // totalPrice = selectedPizzaPrices[selectedSize] ?? 0; // Start with the pizza size price
     // selectedIngredients.forEach((item) {
-    //   totalPrice += item['ingredient'].price * item['quantity'];
+    //   totalPrice += ingredientController.allingredients.firstWhere((e)=>e.id == item['ingredient']).price * item['quantity'];
     // }
-    // );
+   // );
+
+  }
+   totalPrice = getTotalPrice();
 
     setState(() {});
-  }
+
+
   }
   void _removeIngredient(ingredient) {
     // Check if the ingredient exists, and decrease the quantity if it's more than 1, otherwise remove it
@@ -154,8 +167,9 @@ class _AddScreenState extends State<AddScreen> with SingleTickerProviderStateMix
         'ingredients':ingredients
       };
 
+    final AuthenticationController authenticationController = Get.find();
     // Call the createPizza usecase via the controller
-    bool result = await customPizzaController.createCustomPizza( getSize(selectedSize) , ingredients);
+    bool result = await customPizzaController.createCustomPizza( getSize(selectedSize) , ingredients,authenticationController.currentUser.id! , totalPrice);
 
     if (result) {
       // Handle success, maybe navigate to a new screen or show a success message
@@ -176,189 +190,198 @@ class _AddScreenState extends State<AddScreen> with SingleTickerProviderStateMix
         elevation: 0,
         leading: Icon(Icons.arrow_back, color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Animated Pizza on Plate
-              Center(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Wooden Plate
-                    Container(
-                      height: 350,
-                      width: 350,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/plate.png'), // Plate image
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    // Animated Pizza
-                    AnimatedBuilder(
-                      animation: _controller,
-                      builder: (context, child) {
-                        return Transform.rotate(
-                          angle: _rotationAnimation.value * 6.2832, // Full rotation (2 * pi)
-                          child: Container(
-                            height: _sizeAnimation.value,
-                            width: _sizeAnimation.value,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/pizza_main.png'),
-                                fit: BoxFit.cover,
-                              ),
+      body: GetBuilder(
+        init: IngredientController(),
+        builder: (ingredientController) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Animated Pizza on Plate
+                  Center(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Wooden Plate
+                        Container(
+                          height: 350,
+                          width: 350,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/plate.png'), // Plate image
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        );
-                      },
-                    ),
-                    // Stack to display the ingredients added on top of the pizza
-                    ...selectedIngredients.map((item) {
-                      return Positioned(
-                        top: sizeMap[selectedSize]! / 2, // Adjust based on pizza size
-                        left:sizeMap[selectedSize]! / 2-10 , // Adjust based on pizza size
-                        child: Image.network(
-                          item['ingredient'].image,
-                          height: 130, // Adjust the size of the ingredient image
-                          width: 130,  // Adjust the size of the ingredient image
-                          errorBuilder: (context, error, stackTrace) =>
-                              Icon(Icons.error),
                         ),
-                      );
-                    }).toList(),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Size Selector
-              Container(
-                height: 40,
-                width: 300,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildSizeOption('S'),
-                    _buildSizeOption('M'),
-                    _buildSizeOption('L'),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Ingredients Table
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GetBuilder<IngredientController>(builder: (controller) {
-                  if (controller.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (controller.allingredients.isEmpty) {
-                    return Center(
-                      child: Text("No ingredients available."),
-                    );
-                  }
-
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columnSpacing: 30.0, // Slightly increased column spacing
-                      dataRowHeight: 70.0, // Moderately increased row height
-                      headingRowHeight: 50.0, // Moderately increased header height
-                      columns: const [
-                        DataColumn(
-                          label: Text("Image", style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        DataColumn(
-                          label: Text("Name", style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        DataColumn(
-                          label: Text("Price (\$)", style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        DataColumn(
-                          label: Text("Action", style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                      rows: controller.allingredients.map((ingredient) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              Container(
-                                width: 80, // Adjusted width for image
-                                height: 80, // Adjusted height for image
+                        // Animated Pizza
+                        AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            return Transform.rotate(
+                              angle: _rotationAnimation.value * 6.2832, // Full rotation (2 * pi)
+                              child: Container(
+                                height: _sizeAnimation.value,
+                                width: _sizeAnimation.value,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
-                                    image: NetworkImage(ingredient.image),
+                                    image: AssetImage('assets/images/pizza_main.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
+                            );
+                          },
+                        ),
+                        // Stack to display the ingredients added on top of the pizza
+                        ...selectedIngredients.map((item) {
+                          return Center(
+                           // Adjust based on pizza size
+                            child: Image.network(
+                              ingredientController.allingredients.firstWhere((e)=>e.id == item['ingredient']).image,
+                            //  item['ingredient'].image,
+                              //height: 130, // Adjust the size of the ingredient image
+                              width: currentSize * 0.6,  // Adjust the size of the ingredient image
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.error),
                             ),
-                            DataCell(Text(ingredient.name ?? "Unknown", style: TextStyle(fontSize: 16))),
-                            DataCell(Text(ingredient.price.toStringAsFixed(2), style: TextStyle(fontSize: 16))),
-                            DataCell(
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.add),
-                                    onPressed: () {
-                                      _addIngredient(ingredient.id);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.remove),
-                                    onPressed: () {
-                                      // _removeIngredient(ingredient);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                      ],
                     ),
-                  );
-                }),
-              ),
-              const SizedBox(height: 40),
-              // Add to Cart Button
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ElevatedButton(
-                  onPressed:( ){_addToCart(selectedSize,selectedIngredients);}, // Call the create pizza method
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF790303),
-                    shape: RoundedRectangleBorder(
+                  ),
+                  const SizedBox(height: 20),
+                  // Size Selector
+                  Container(
+                    height: 40,
+                    width: 300,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildSizeOption('S'),
+                        _buildSizeOption('M'),
+                        _buildSizeOption('L'),
+                      ],
+                    ),
                   ),
-                  child: const Text(
-                    "Add to Cart",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.amber),
+                  const SizedBox(height: 20),
+                  // Ingredients Table
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: GetBuilder<IngredientController>(builder: (controller) {
+                      if (controller.isLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (controller.allingredients.isEmpty) {
+                        return Center(
+                          child: Text("No ingredients available."),
+                        );
+                      }
+          
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          columnSpacing: 30.0, // Slightly increased column spacing
+                          dataRowHeight: 70.0, // Moderately increased row height
+                          headingRowHeight: 50.0, // Moderately increased header height
+                          columns: const [
+                            DataColumn(
+                              label: Text("Image", style: TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                            DataColumn(
+                              label: Text("Name", style: TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                            DataColumn(
+                              label: Text("Price (\$)", style: TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                            DataColumn(
+                              label: Text("Action", style: TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                          ],
+                          rows: controller.allingredients.map((ingredient) {
+                            return DataRow(
+                              cells: [
+                                DataCell(
+                                  Container(
+                                    width: 80, // Adjusted width for image
+                                    height: 80, // Adjusted height for image
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: NetworkImage(ingredient.image),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                DataCell(Text(ingredient.name ?? "Unknown", style: TextStyle(fontSize: 16))),
+                                DataCell(Text(ingredient.price.toStringAsFixed(2), style: TextStyle(fontSize: 16))),
+                                DataCell(
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.add),
+                                        onPressed: () {
+                                          _addIngredient(ingredient.id);
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.remove),
+                                        onPressed: () {
+                                          // _removeIngredient(ingredient);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    }),
                   ),
-                ),
+                  const SizedBox(height: 40),
+                  // Add to Cart Button
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: ElevatedButton(
+                      onPressed:( ){
+                        print(selectedSize);
+                        print(selectedIngredients);
+                        _addToCart(selectedSize,selectedIngredients);
+                        }, // Call the create pizza method
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF790303),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      ),
+                      child: const Text(
+                        "Add to Cart",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.amber),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Total Price Display
+                  Text(
+                    'Total: \$${totalPrice.toStringAsFixed(2)}',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              // Total Price Display
-              Text(
-                'Total: \$${totalPrice.toStringAsFixed(2)}',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        }
       ),
     );
   }

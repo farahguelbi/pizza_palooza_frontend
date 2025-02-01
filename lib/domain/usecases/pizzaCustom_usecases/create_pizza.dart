@@ -10,8 +10,8 @@ class CreatePizza {
 
   Future<Either<Failure, Unit>> call(
     String selectedSize,
-    List<Map<String,dynamic>> ingredients,
+    List<Map<String,dynamic>> ingredients,String userID , double price
   ) async {
-    return await repository.createPizza(selectedSize, ingredients);
+    return await repository.createPizza(selectedSize, ingredients, userID ,  price);
   }
 }

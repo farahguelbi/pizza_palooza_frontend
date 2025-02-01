@@ -8,7 +8,7 @@ import 'package:front/core/utils/api_const.dart';
 abstract class PizzaCustomRemoteDataSource {
   Future<List<PizzacustomModel>> getAllCustomPizzas();
   Future<PizzacustomModel> getCustomPizzaById(String id);
-  Future<void> createPizza(String selectedSize, List<Map<String,dynamic>> ingredients);
+  Future<void> createPizza(String selectedSize, List<Map<String,dynamic>> ingredients, String userID , double price);
 }
 
 class PizzaCustomRemoteDataSourceImpl implements PizzaCustomRemoteDataSource {
@@ -61,16 +61,19 @@ class PizzaCustomRemoteDataSourceImpl implements PizzaCustomRemoteDataSource {
   }
 
   @override
-  Future<void> createPizza(String selectedSize, List<Map<String,dynamic>> ingredients) async {
+  Future<void> createPizza(String selectedSize, List<Map<String,dynamic>> ingredients , String userID , double price) async {
     try {
+      print(ingredients);
       final response = await http.post(
         Uri.parse(ApiConst.createPizza),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'selectedSize': selectedSize,
-          'ingredients': ingredients,
-        }),
-      );
+        body:json.encode( {
+          "size": selectedSize,
+          "ingredients": ingredients,
+          "userId" : userID,
+          "price" : price
+        },
+      ));
 
       if (response.statusCode == 201) {
       } else {

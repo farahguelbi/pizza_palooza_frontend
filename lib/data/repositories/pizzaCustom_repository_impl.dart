@@ -13,10 +13,10 @@ class PizzaCustomRepositoryImpl implements PizzaCustomRepository {
   @override
   Future<Either<Failure, Unit>> createPizza(
     String selectedSize, 
-    List<Map<String,dynamic>> ingredients,
+    List<Map<String,dynamic>> ingredients,String userID , double price
   ) async {
     try {
-      final pizza = await custompizzaremoteDataSource.createPizza(selectedSize, ingredients);
+      final pizza = await custompizzaremoteDataSource.createPizza(selectedSize, ingredients,userID,price);
       return Right(unit);  // Return the created pizza
     } catch (e) {
       return Left(ServerFailure());  // Return failure in case of an error

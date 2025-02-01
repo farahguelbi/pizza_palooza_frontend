@@ -44,13 +44,13 @@ List<PizzaCustom> allPizzas = [];
   }
 Future<bool> createCustomPizza(
   String selectedSize,
-  List<Map<String,dynamic>> ingredients,
+  List<Map<String,dynamic>> ingredients,String userID , double price
 ) async {
   isLoading = true;
   update();
 
   try {
-    final res = await CreatePizza(sl())(selectedSize, ingredients);
+    final res = await CreatePizza(sl())(selectedSize, ingredients,userID,price);
 
     isLoading = false;
 
