@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:front/data/models/sale_model.dart';
 import '../../core/errors/failures/failures.dart';
 import '../../domain/entities/sale.dart';
 import '../../domain/repositories/sale_repository.dart';
@@ -69,28 +70,54 @@ class SaleRepositoryImpl implements SaleRepository {
   }
   
   @override
-  Future<Either<Failure, Sale>> createSale({required String userID, required String pizzaId, required int quantityPizza}) async {
+  Future<Either<Failure, Sale>> createSale({required String userID, required String pizzaId, required int quantityPizza,required totalPrice}) async {
    try {
-      final saleData = {
-        'userId': userID,
-        'pizzaId': pizzaId,
-        'pizzaQuantity': quantityPizza,
-        // 'sides': sides.map((side) => {'sideId': side}).toList(),
-        // 'quantitiesSides': quantitiesSides,
-      };
-
-      final sale = await saleRemoteDataSource.createSale(saleData);
+     
+    
+      final sale = await saleRemoteDataSource.createSale(userID,pizzaId,quantityPizza,totalPrice);
       return Right(sale);
     } catch (e) {
       return Left(ServerFailure());
     }
   }
   
-  @override
-  Future<Either<Failure, void>> addMultipleSides(String saleId, List<SaleSide> sides, double totalPrice) {
-    // TODO: implement addMultipleSides
-    throw UnimplementedError();
+//  @override
+//   Future<Either<Failure, void>> addMultipleSides(
+//       String saleId, List<SaleSide> sides, double totalPrice) async {
+//   try {
+//     await saleRemoteDataSource.addMultipleSides(
+//       saleId,
+//       sides.map((side) => SaleSideModel(sideId: side.sideId, quantity: side.quantity)).toList(),
+//       totalPrice,
+//     );
+//     return const Right(null);
+//   } catch (error) {
+//     return Left(ServerFailure());
+//   }
+//   }
+@override
+Future<Either<Failure, void>> addMultipleSides(
+    String saleId, List<SaleSide> sides, double totalPrice) async {
+  try {
+    print("Calling addMultipleSides in SaleRemoteDataSource...");
+    print("Sale ID: $saleId");
+    print("Sides to add: ${sides.map((s) => {'sideId': s.sideId, 'quantity': s.quantity}).toList()}");
+    print("Total Price: $totalPrice");
+
+    await saleRemoteDataSource.addMultipleSides(
+      saleId,
+      sides.map((side) => SaleSideModel(sideId: side.sideId, quantity: side.quantity)).toList(),
+      totalPrice,
+    );
+
+    print("Successfully added sides to sale ID: $saleId");
+    return const Right(null);
+  } catch (error) {
+    print("Error in addMultipleSides: $error");
+    return Left(ServerFailure());
   }
+}
+
   
   @override
   Future<Either<Failure, Unit>> updateSale(Sale sale) {

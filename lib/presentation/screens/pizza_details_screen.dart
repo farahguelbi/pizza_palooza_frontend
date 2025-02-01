@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/domain/entities/pizza.dart';
+import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/controller/sale_controller.dart';
 import 'package:front/presentation/controller/side_controller.dart';
 import 'package:front/presentation/screens/sideScreen.dart';
 import 'package:get/get.dart';
@@ -15,6 +17,9 @@ class PizzaDetailsScreen extends StatefulWidget {
 
 class _PizzaDetailsScreenState extends State<PizzaDetailsScreen> {
   final SideController sideController = Get.put(SideController());
+  final SaleController saleController = Get.put(SaleController());
+  late String currentUserId;
+
 
   int quantity = 1;
   String selectedSize = "Medium";
@@ -23,7 +28,11 @@ class _PizzaDetailsScreenState extends State<PizzaDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    totalPrice = widget.pizza.sizes.medium * quantity; // Default to Medium size
+    totalPrice = widget.pizza.sizes.medium * quantity;
+    
+ final authController = Get.find<AuthenticationController>();
+ currentUserId = authController.currentUser.id!;
+
   }
 
   void incrementQuantity() {
@@ -261,13 +270,45 @@ class _PizzaDetailsScreenState extends State<PizzaDetailsScreen> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SideScreen()), 
-                        );
-                      },
+                     onPressed: () async {
+  // try {
+  
+   final sale= await saleController.createSale(currentUserId, widget.pizza.id, quantity, totalPrice);
+ final saleId = sale?.id ?? "";
+    // Step 2: Check if sale was created and retrieve saleId
+    // if (saleController.sales.isNotEmpty) {
+    //   String saleId = saleController.sales.last.id ?? "";
+
+    //   if (saleId.isNotEmpty) {
+    //     print("Navigating to SideScreen with saleId: $saleId");
+
+        // Step 3: Navigate to SideScreen
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => SideScreen(saleId:saleId),
+          ),
+        );
+      // } else {
+  //       print("Failed to retrieve saleId after creating the sale.");
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text("Failed to retrieve Sale ID. Please try again.")),
+  //       );
+  //     }
+  //   } else {
+  //     print("Sale creation failed. No sale available in the list.");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text("Sale creation failed. Please try again.")),
+  //     );
+  //   }
+  // } catch (e) {
+  //   print("Error during sale creation: $e");
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(content: Text("Error: $e")),
+  //   );
+  // }
+},
+
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF790303),
                         shape: RoundedRectangleBorder(

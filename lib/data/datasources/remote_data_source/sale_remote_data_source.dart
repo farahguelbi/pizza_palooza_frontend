@@ -4,16 +4,22 @@ import 'package:front/core/utils/api_const.dart';
 import 'package:front/data/datasources/local_data_source/authentification_local_data_source.dart';
 import 'package:front/data/datasources/local_data_source/settings_local_data_source.dart';
 import 'package:front/data/models/token_model.dart';
+import 'package:front/domain/entities/sale.dart';
 import 'package:http/http.dart' as http;
 
 import '../../models/sale_model.dart';
 
 abstract class SaleRemoteDataSource {
-  Future<SaleModel> createSale(Map<String, dynamic> saleData);
+  Future<SaleModel> createSale( String userID,
+     String pizzaId,
+   int quantityPizza,double totalPrice);
+  
   Future<List<SaleModel>> getAllSales();
   Future<SaleModel> getSaleById(String id);
   Future<void> updateSale( Map<String, dynamic> saleData);
   Future<void> deleteSale(String id);
+   Future<void> addMultipleSides(String saleId, List<SaleSide> sides, double totalPrice);
+
 
 }
 
@@ -27,22 +33,30 @@ class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
     return await SettingsLocalDataSourcImpl().loadLocale();
   }
   @override
-  Future<SaleModel> createSale(Map<String, dynamic> saleData) async {
+  Future<SaleModel> createSale(  String userID,String pizzaId,int quantityPizza,double totalPrice) async {
     final response = await http.post(
       Uri.parse(ApiConst.createSale),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(saleData),
-    );
+body: json.encode({
+          'userId': userID,
+          'pizzaId': pizzaId,
+          'quantitypizza': quantityPizza,
+          'totalPrice':totalPrice
+        }),    );
 
     if (response.statusCode == 201) {
       // Parse the response body into a SaleModel
       final data = jsonDecode(response.body);
-      return SaleModel.fromJson(data);
-    } else {
-      // Handle error cases by throwing an exception
-      throw Exception('Failed to create sale: ${response.body}');
-    }
+      // Extract the `sale` object and pass it to `SaleModel.fromJson`
+    final saleData = data['sale'];
+    print("Parsed Sale Data: $saleData");
+
+    return SaleModel.fromJson(saleData);
+  } else {
+    // Handle error cases by throwing an exception
+    throw Exception('Failed to create sale: ${response.body}');
   }
+}
 
   @override
   Future<List<SaleModel>> getAllSales() async {
@@ -98,7 +112,40 @@ class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
       throw ServerException();
     }
   }
+ @override
+  Future<void> addMultipleSides(String saleId, List<SaleSide> sides, double totalPrice) async {
+   try{
+  final Map<String, dynamic> body = {
+    "saleId": saleId,
+    "sides": sides.map((side) => SaleSideModel(
+      sideId: side.sideId,
+      quantity: side.quantity,
+    ).toJson()).toList(), 
+    "totalPrice": totalPrice,
+  };
 
+    final response = await http.post(
+     Uri.parse(ApiConst.AddMultipleSides),
+    
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+
+    );
+      // Log the response
+    print("Response Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Sides added successfully.");
+    } else {
+      print("Failed to add sides. Status: ${response.statusCode}, Body: ${response.body}");
+      throw Exception('Failed to add sides: ${response.body}');
+    }
+  } catch (e) {
+    print("Error in addMultipleSides: $e");
+    throw Exception("Error adding multiple sides: $e");
+  }
 }
 
+}
 

@@ -32,14 +32,15 @@ const Sale({
 }
 
 class SaleSide extends Equatable {
-  final Side side; 
+  final String sideId; 
   final int quantity; 
 
   const SaleSide({
-    required this.side,
+    required this.sideId,
     required this.quantity,
   });
 
   @override
-  List<Object?> get props => [side, quantity];
+  List<Object?> get props => [sideId, quantity];
+  
 }

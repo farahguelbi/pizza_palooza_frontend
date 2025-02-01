@@ -12,8 +12,8 @@ abstract class SaleRepository {
     required String userID,
     required String pizzaId,
     required int quantityPizza,
-    // required List<String> sides,
-    // required List<int> quantitiesSides,
+    required double totalPrice,
+
     });
  
   Future<Either<Failure, Unit>> updateSale(Sale sale);

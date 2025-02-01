@@ -18,19 +18,34 @@ class SaleModel extends Sale {
           sides: sides,
         );
 
-  factory SaleModel.fromJson(Map<String, dynamic> json) {
-    return SaleModel(
-      id: json['_id'],
-      pizzaId: json['pizzaId'] ?? '',
-      pizzaQuantity: json['quantitypizza'] ?? 0,
-      userId: json['userId'] ?? '',
-      totalPrice: (json['totalprice'] as num?)?.toDouble() ?? 0.0,
+  // factory SaleModel.fromJson(Map<String, dynamic> json) {
+  //   return SaleModel(
+  //     id: json['_id'],
+  //     pizzaId: json['pizzaId'] ?? '',
+  //     pizzaQuantity: json['quantitypizza'] ?? 0,
+  //     userId: json['userId'] ?? '',
+  //     totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
       
-      sides: (json['sides'] as List<dynamic>? ?? [])
-          .map((sideJson) => SaleSideModel.fromJson(sideJson))
-          .toList(),
-    );
-  }
+  //     sides: (json['sides'] as List<dynamic>? ?? [])
+  //         .map((sideJson) => SaleSideModel.fromJson(sideJson))
+  //         .toList(),
+  //   );
+  // }
+factory SaleModel.fromJson(Map<String, dynamic> json) {
+  print("📌 Parsing Sale JSON: $json"); // Debugging
+
+  // Extract sale object if it exists
+  final saleData = json.containsKey('sale') ? json['sale'] : json;
+
+  return SaleModel(
+    id: saleData['_id'] ?? '',
+    pizzaId: saleData['pizzaId']?['_id'] ?? '', // Extract pizza ID correctly
+    pizzaQuantity: saleData['quantitypizza'] ?? 0,
+    userId: saleData['userId'] ?? '',
+    totalPrice: (saleData['totalPrice'] is num) ? (saleData['totalPrice'] as num).toDouble() : 0.0,
+    sides: (saleData['sides'] as List<dynamic>).map((side) => SaleSideModel.fromJson(side)).toList(),
+  );
+}
 
   Map<String, dynamic> toJson() {
     return {
@@ -38,7 +53,7 @@ class SaleModel extends Sale {
       'pizzaId': pizzaId,
       'quantitypizza': pizzaQuantity,
       'userId': userId,
-      'totalprice': totalPrice,
+      'totalPrice': totalPrice,
       'sides': sides.map((side) => (side as SaleSideModel).toJson()).toList(),
     };
   }
@@ -48,17 +63,17 @@ class SaleModel extends Sale {
 /// Modèle pour les côtés associés à une vente
 class SaleSideModel extends SaleSide {
   const SaleSideModel({
-    required SideModel side,
+    required String sideId,
     required int quantity,
   }) : super(
-          side: side,
+          sideId: sideId,
           quantity: quantity,
         );
 
   /// Convertir un JSON en une instance de `SaleSideModel`
   factory SaleSideModel.fromJson(Map<String, dynamic> json) {
     return SaleSideModel(
-      side: SideModel.fromJson(json['side']),
+      sideId: (json['sideId']as String),
       quantity: json['quantity'],
     );
   }
@@ -66,8 +81,8 @@ class SaleSideModel extends SaleSide {
   /// Convertir une instance de `SaleSideModel` en JSON
   Map<String, dynamic> toJson() {
     return {
-      'side': (side as SideModel).toJson(),
-      'quantity': quantity,
+ 'sideId': sideId??"",
+    'quantity': quantity??"",
     };
   }
 }
