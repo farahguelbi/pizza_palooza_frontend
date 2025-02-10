@@ -8,7 +8,9 @@ class GetAllCommands {
 
   GetAllCommands(this.repository);
 
-  Future<Either<Failure, List<Command>>> call(String userId) async {
-    return repository.getAllCommands(userId);
+  // Future<Either<Failure, List<Command>>> call(String userId) async {
+  //   return repository.getAllCommands(userId);
+    Future<Either<String, List<Command>>> call() async {
+    return await repository.getAllCommands();
   }
 }

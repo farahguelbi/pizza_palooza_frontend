@@ -274,7 +274,10 @@ class _PizzaDetailsScreenState extends State<PizzaDetailsScreen> {
   // try {
   
    final sale= await saleController.createSale(currentUserId, widget.pizza.id, quantity, totalPrice);
- final saleId = sale?.id ?? "";
+   print('SALE1 ${sale}');
+ final saleId = sale;
+ print('id $saleId');
+ 
     // Step 2: Check if sale was created and retrieve saleId
     // if (saleController.sales.isNotEmpty) {
     //   String saleId = saleController.sales.last.id ?? "";
@@ -285,7 +288,7 @@ class _PizzaDetailsScreenState extends State<PizzaDetailsScreen> {
         // Step 3: Navigate to SideScreen
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => SideScreen(saleId:saleId),
+            builder: (context) => SideScreen(saleId:saleId!),
           ),
         );
       // } else {

@@ -1,11 +1,15 @@
 
 import 'package:front/data/datasources/local_data_source/authentification_local_data_source.dart';
+import 'package:front/data/datasources/remote_data_source/cart_remote_datasource.dart';
+import 'package:front/data/datasources/remote_data_source/command_remote_datasource.dart';
 import 'package:front/data/datasources/remote_data_source/ingredient_remote_datasource.dart';
 import 'package:front/data/datasources/remote_data_source/pizzaCustom_remote_datasource.dart';
 import 'package:front/data/datasources/remote_data_source/pizza_remote_datasource.dart';
 import 'package:front/data/datasources/remote_data_source/sale_remote_data_source.dart';
 import 'package:front/data/datasources/remote_data_source/side_remote_datasource.dart';
 import 'package:front/data/datasources/remote_data_source/user_remote_datasource.dart';
+import 'package:front/data/repositories/cart_repository_impl.dart';
+import 'package:front/data/repositories/command_repository_impl.dart';
 import 'package:front/data/repositories/ingredient_repository_impl.dart';
 import 'package:front/data/repositories/pizzaCustom_repository_impl.dart';
 
@@ -14,6 +18,8 @@ import 'package:front/data/repositories/sale_repository_impl.dart';
 
 
 import 'package:front/data/repositories/user_repository_impl.dart';
+import 'package:front/domain/repositories/cart_repository.dart';
+import 'package:front/domain/repositories/command_repository.dart';
 import 'package:front/domain/repositories/ingredient_repository.dart';
 import 'package:front/domain/repositories/pizza_custom_repository.dart';
 
@@ -23,6 +29,15 @@ import 'package:front/domain/repositories/sale_repository.dart';
 import 'package:front/domain/repositories/sides_repository.dart';
 
 import 'package:front/domain/repositories/user_repository.dart';
+import 'package:front/domain/usecases/cart_usecases/add_sale.dart';
+import 'package:front/domain/usecases/cart_usecases/create_cart.dart';
+import 'package:front/domain/usecases/cart_usecases/get_cart.dart';
+import 'package:front/domain/usecases/cart_usecases/remove_sale.dart';
+import 'package:front/domain/usecases/command_usecases/create_command.dart';
+import 'package:front/domain/usecases/command_usecases/delete_command.dart';
+import 'package:front/domain/usecases/command_usecases/get_all_commands.dart';
+import 'package:front/domain/usecases/command_usecases/get_command_by_id.dart';
+import 'package:front/domain/usecases/command_usecases/update_command.dart';
 import 'package:front/domain/usecases/ingredient_usecases/get_all_ingredients.dart';
 import 'package:front/domain/usecases/ingredient_usecases/get_ingredient_by_id.dart';
 import 'package:front/domain/usecases/ingredient_usecases/get_ingredients_by_layer.dart';
@@ -84,6 +99,12 @@ Future<void> init() async {
     sl.registerLazySingleton<SaleRemoteDataSource>(
     () => SaleRemoteDataSourceImpl(),
   );
+     sl.registerLazySingleton<CartRemoteDataSource>(
+    () => CartRemoteDataSourceImpl(),
+  );
+     sl.registerLazySingleton<CommandRemoteDataSource>(
+    () => CommandRemoteDataSourceImpl(),
+  );
 
 
   /* repositories */
@@ -114,6 +135,14 @@ sl.registerLazySingleton<SidesRepository>(
 );
 sl.registerLazySingleton<SaleRepository>(
   ()=>SaleRepositoryImpl(saleRemoteDataSource: sl())
+  
+);
+sl.registerLazySingleton<CartRepository>(
+  ()=>CartRepositoryImpl(cartremoteDataSource: sl())
+  
+);
+sl.registerLazySingleton<CommandRepository>(
+  ()=>CommandRepositoryImpl(commandRemoteDataSource: sl())
   
 );
 
@@ -155,9 +184,11 @@ sl.registerLazySingleton<SaleRepository>(
     sl.registerLazySingleton(() => CreateSale(sl()));
       sl.registerLazySingleton(() => DeleteSale(sl()));
         sl.registerLazySingleton(() => GetAllSales(sl()));
-
-
-
+//cart
+  sl.registerLazySingleton(() => CreateOrGetCartUseCase(sl()));
+  sl.registerLazySingleton(() => AddSaleToCartUseCase(sl()));
+  sl.registerLazySingleton(() => GetCartUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveSaleFromCartUseCase(sl()));
 //wishlist
 sl.registerLazySingleton(() => CreateWishListUseCase(sl()));
 sl.registerLazySingleton(() => GetWishlist(sl()));
@@ -167,6 +198,10 @@ sl.registerLazySingleton(() => AddToWishlist(sl()));
 sl.registerLazySingleton(() => GetCustomPizzaById(sl()));
 sl.registerLazySingleton(() => GetAllCustomPizzas(sl()));
 sl.registerLazySingleton(() => CreatePizza(sl()));
-
-
+//command 
+sl.registerLazySingleton(() => CreateCommand(sl()));
+sl.registerLazySingleton(() => DeleteCommand(sl()));
+sl.registerLazySingleton(() => UpdateCommand(sl()));
+sl.registerLazySingleton(() => GetAllCommands(sl()));
+sl.registerLazySingleton(() => GetCommandById(sl()));
 }

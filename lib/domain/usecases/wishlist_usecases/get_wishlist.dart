@@ -9,7 +9,7 @@ class GetWishlist {
 
   GetWishlist(this.repository);
 
-   Future<Either<Failure, Wishlist>> call(String userId) {
-    return repository.getWishlist(userId);
+   Future<Either<Failure, Wishlist?>> call({required String userId}) {
+    return repository.getWishlist(userId:userId);
   }
 }

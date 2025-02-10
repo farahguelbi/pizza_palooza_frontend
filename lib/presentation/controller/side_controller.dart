@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:front/di.dart';
 import 'package:front/domain/entities/sides.dart';
 import 'package:front/domain/usecases/side_usecases/get_all_sides.dart';
@@ -5,6 +6,7 @@ import 'package:front/domain/usecases/side_usecases/get_side_by_id.dart';
 import 'package:get/get.dart';
 
 class SideController extends GetxController {
+  
    List<Side> AllSides = [];
   List<Side> SidesList = [];
   bool isLoading = false;
@@ -12,21 +14,21 @@ class SideController extends GetxController {
   Side ?selectedSide;
    Future<bool> getAllsides() async {
     isLoading = true;
-    update();
+  _safeUpdate();
     final res = await GetAllSidesUseCase(sl())();
     isLoading = false;
-
+   _safeUpdate();
     res.fold(
       (failure) {
         msg = 'Failed to load products';
         AllSides=[];
-        update();
+     _safeUpdate();
         return false;
       },
       (sides) {
         AllSides = sides;
         msg = '';
-        update();
+      _safeUpdate();
         return true;
       },
     );
@@ -35,21 +37,21 @@ class SideController extends GetxController {
   // Fetch a single product by ID
   Future<bool> getSideById(String id) async {
     isLoading = true;
-
+_safeUpdate();
     final res = await GetSideById(sl())( id);
     isLoading = false;
-
+_safeUpdate();
     res.fold(
       (failure) {
         msg = 'Product not found';
         selectedSide=null;
-        update();
+        _safeUpdate();
         return false;
       },
       (side) {
         selectedSide = side;
         msg = '';
-        update();
+       _safeUpdate();
         return true;
      
       },
@@ -57,5 +59,9 @@ class SideController extends GetxController {
     );
     return true;
 }
-
+ void _safeUpdate() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      update();
+    });
+  }
 }

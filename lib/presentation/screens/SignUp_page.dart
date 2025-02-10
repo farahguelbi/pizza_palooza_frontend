@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:front/presentation/controller/authentification_controller.dart';
+import 'package:front/presentation/screens/login_page.dart';
 import 'package:front/presentation/widget/custom_text_field.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
@@ -77,7 +78,15 @@ class _SignupPageState extends State<SignupPage> {
                         alignment: Alignment.topLeft,
                         child: IconButton(
                           icon: const Icon(Icons.arrow_back, color: Colors.black),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () {
+
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginPage(),
+                                    ),
+                                  );
+                          },
+                          // => Navigator.pop(context),
                         ),
                       ),
                       SizedBox(height: size.height * 0.01),

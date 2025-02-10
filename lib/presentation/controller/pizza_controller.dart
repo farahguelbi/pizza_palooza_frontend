@@ -7,6 +7,7 @@ import 'package:front/domain/usecases/pizza_usecases/search_pizzas.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class PizzaController extends GetxController {
+  
   List<Pizza> allPizzas = [];
   List<Pizza> pizzasList = [];
   bool isLoading = false;

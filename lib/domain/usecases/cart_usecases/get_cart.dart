@@ -8,7 +8,7 @@ class GetCartUseCase {
   final CartRepository repository;
 
   GetCartUseCase(this.repository);
-  Future<Either<Failure, Cart>> call(String userId) async {
+  Future<Either<Failure, Cart?>> call(String userId) async {
     return repository.getCart(userId);
   }
 }

@@ -8,7 +8,7 @@ abstract class SaleRepository {
  Future<Either<Failure, List<Sale>>>getAllSales();
  Future<Either<Failure, Sale>> getSaleById(String saleId);
  Future<Either<Failure,void>> addMultipleSides(String saleId, List<SaleSide> sides, double totalPrice);
-  Future<Either<Failure, Sale>> createSale({  
+  Future<Either<Failure, String>> createSale({  
     required String userID,
     required String pizzaId,
     required int quantityPizza,

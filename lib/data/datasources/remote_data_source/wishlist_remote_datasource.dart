@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:front/core/errors/exceptions/exceptions.dart';
 import 'package:front/core/utils/api_const.dart';
+import 'package:front/domain/usecases/wishlist_usecases/get_wishlist.dart';
 import 'package:http/http.dart' as http;
 import '../../models/wishlist_model.dart';
 
@@ -9,7 +10,7 @@ abstract class WishlistRemoteDataSource {
     Future<void> createWishList({required String userId});
   Future<void> addToWishlist({required String userId, required String pizzaId});
   Future<void> removeFromWishlist({required String userId, required String pizzaId});
-  Future<WishlistModel> getWishlist({required String userId});
+  Future<WishlistModel?> getWishlist({required String userId});
 }
 
 class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
@@ -17,7 +18,7 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
   Future<void> createWishList({required String userId}) async {
     try {
       final url = Uri.parse(ApiConst.createWishList);
-      final body = jsonEncode({'userId': userId, 'pizzasId': []});
+      final body = jsonEncode({'userID': userId, 'pizzas': []});
       print(body);
       final res = await http.post(
         url,
@@ -26,7 +27,7 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
         },
         body: body,
       );
-      if (res.statusCode != 200) {
+      if (res.statusCode != 201) {
         throw ServerException(message: "Failed to create wishlist");
       }
     } catch (e) {
@@ -106,35 +107,56 @@ Future<void> addToWishlist({required String userId, required String pizzaId}) as
     }
   }
 
-  @override
-  Future<WishlistModel> getWishlist({required String userId}) async {
-      print('[RemoteDataSource] Fetching wishlist for userId: $userId');
+  // @override
+  // Future<WishlistModel> getWishlist({required String userId}) async {
+  //     print('[RemoteDataSource] Fetching wishlist for userId: $userId');
 
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse(ApiConst.getWishlist(userId)),
+  //       headers: {'Content-Type': 'application/json'},
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       try {
+  //         final Map<String, dynamic> jsonResponse = json.decode(response.body);
+  //         print(WishlistModel.fromJson(jsonResponse));
+  //               print('[RemoteDataSource] Parsed Response: $jsonResponse');
+
+
+  //         return WishlistModel.fromJson(jsonResponse);
+  //       } catch (e) {
+  //         throw ParsingException(message: 'Error parsing wishlist response: $e');
+  //       }
+  //     } else {
+  //           print('[RemoteDataSource] Server Error: Status Code ${response.statusCode}');
+
+  //       throw ServerException(message: 'Failed to fetch wishlist. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print(e.toString());
+  //     throw ServerException(message: 'Error fetching wishlist: $e');
+  //   }
+  // }
+  @override
+  Future<WishlistModel?> getWishlist({required String userId}) async {
     try {
-      final response = await http.get(
-        Uri.parse(ApiConst.getWishlist(userId)),
-        headers: {'Content-Type': 'application/json'},
-      );
+      final uri = Uri.parse('${ApiConst.getWishlist}?userID=$userId');
+
+      final response = await http.get(uri);
 
       if (response.statusCode == 200) {
-        try {
-          final Map<String, dynamic> jsonResponse = json.decode(response.body);
-          print(WishlistModel.fromJson(jsonResponse));
-                print('[RemoteDataSource] Parsed Response: $jsonResponse');
-
-
-          return WishlistModel.fromJson(jsonResponse);
-        } catch (e) {
-          throw ParsingException(message: 'Error parsing wishlist response: $e');
-        }
+        print('API Response: ${response.body}');
+        final body = json.decode(response.body);
+        return WishlistModel.fromJson(body);
+      } else if (response.statusCode == 404) {
+        return null; // No wishlist found
       } else {
-            print('[RemoteDataSource] Server Error: Status Code ${response.statusCode}');
-
-        throw ServerException(message: 'Failed to fetch wishlist. Status code: ${response.statusCode}');
+        throw ServerException(); // Handle other errors
       }
     } catch (e) {
-      print(e.toString());
-      throw ServerException(message: 'Error fetching wishlist: $e');
-    }
-  }
+      throw ServerException(); 
+      }
+      }// Handle network or other issues
+
 }

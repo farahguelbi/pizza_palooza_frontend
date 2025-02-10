@@ -8,7 +8,7 @@ import 'package:dartz/dartz.dart';
 
   CreateSale(this.repository);
 
-  Future<Either<Failure, Sale>> call({
+  Future<Either<Failure, String>> call({
     required String userID,
     required String pizzaId,
     required int quantityPizza,

@@ -8,7 +8,9 @@ class GetCommandById {
 
   GetCommandById(this.repository);
 
-  Future<Either<Failure, Command>> call(String commandId) async {
-    return await repository.getCommandById(commandId);
+  // Future<Either<Failure, Command>> call(String commandId) async {
+  //   return await repository.getCommandById(commandId);
+   Future<Either<String, Command>> call(String id) async {
+    return await repository.getCommandById(id);
   }
 }

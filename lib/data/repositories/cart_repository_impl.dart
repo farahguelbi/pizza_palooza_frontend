@@ -7,14 +7,14 @@ import '../../data/datasources/remote_data_source/cart_remote_datasource.dart';
 import '../models/cart_model.dart';
 
 class CartRepositoryImpl implements CartRepository {
-  final CartRemoteDataSource remoteDataSource;
+  final CartRemoteDataSource cartremoteDataSource;
 
-  CartRepositoryImpl(this.remoteDataSource);
+  CartRepositoryImpl({required this.cartremoteDataSource});
 
   @override
   Future<Either<Failure, Cart>> createOrGetCart(String userId) async {
     try {
-      final cartModel = await remoteDataSource.createOrGetCart(userId);
+      final cartModel = await cartremoteDataSource.createOrGetCart(userId);
       return Right(cartModel);
     } catch (e) {
       return Left(ServerFailure());
@@ -26,7 +26,7 @@ class CartRepositoryImpl implements CartRepository {
 Future<Either<Failure, Unit>> addSaleToCart(String userId, String saleId) async {
   try {
     // Wrap the saleId into a Map
-    await remoteDataSource.addSaleToCart(userId, {'saleId': saleId});
+    await cartremoteDataSource.addSaleToCart(userId, saleId);
     return const Right(unit);
   } catch (e) {
     return Left(ServerFailure());
@@ -38,7 +38,7 @@ Future<Either<Failure, Unit>> addSaleToCart(String userId, String saleId) async 
  @override
   Future<Either<Failure, Cart>> getCart(String userId) async {
     try {
-      final cartModel = await remoteDataSource.getCart(userId);
+      final cartModel = await cartremoteDataSource.getCart(userId);
       return Right(Cart(
         id: cartModel.id,
         user: cartModel.user,
@@ -54,7 +54,7 @@ Future<Either<Failure, Unit>> addSaleToCart(String userId, String saleId) async 
  @override
   Future<Either<Failure, Unit>> removeSaleFromCart(String userId, String saleId) async {
     try {
-      await remoteDataSource.removeSaleFromCart(userId, saleId);
+      await cartremoteDataSource.removeSaleFromCart(userId, saleId);
       return Right(unit);
     } catch (e) {
       return Left(ServerFailure());
@@ -64,7 +64,7 @@ Future<Either<Failure, Unit>> addSaleToCart(String userId, String saleId) async 
    @override
   Future<Either<Failure, Unit>> clearCart(String userId) async {
     try {
-      await remoteDataSource.clearCart(userId);
+      await cartremoteDataSource.clearCart(userId);
       return Right(unit);
     } catch (e) {
       return Left(ServerFailure());

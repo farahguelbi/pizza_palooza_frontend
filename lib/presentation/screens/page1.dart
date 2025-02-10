@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/domain/usecases/user_usecases/get_user_by_id.dart';
+import 'package:front/presentation/controller/cart_controller.dart';
+import 'package:front/presentation/controller/command_controller.dart';
 import 'package:front/presentation/controller/sale_controller.dart';
 import 'package:front/presentation/controller/wishlist_controller.dart';
 import 'package:front/presentation/screens/main_page.dart';
@@ -23,8 +25,11 @@ class Page1 extends StatelessWidget {
     final AuthenticationController authController = Get.find();
     
     Get.put(WishlistController());
-        Get.put(SideController());
-                Get.put(SaleController());
+    Get.put(SideController());
+    Get.put(SaleController());
+    Get.put(CartController());
+    Get.put(CommandController());
+
 
 
 
@@ -60,7 +65,7 @@ Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (_) => isLoggedIn ? const MainPage() : const LoginPage()));
+              builder: (_) => isLoggedIn ? const MainPage(): const LoginPage()));
     }
     );
 

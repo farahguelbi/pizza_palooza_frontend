@@ -70,7 +70,7 @@ class SaleRepositoryImpl implements SaleRepository {
   }
   
   @override
-  Future<Either<Failure, Sale>> createSale({required String userID, required String pizzaId, required int quantityPizza,required totalPrice}) async {
+  Future<Either<Failure, String>> createSale({required String userID, required String pizzaId, required int quantityPizza,required totalPrice}) async {
    try {
      
     

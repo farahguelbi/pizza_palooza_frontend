@@ -128,29 +128,58 @@ class WishlistController extends GetxController {
       },
     );
   }
-  // Fetch wishlist for a user
+  // // Fetch wishlist for a user
+  // Future<bool> getWishlistByUserId(String userId) async {
+  //   isLoading = true;
+  //   errorMessage = '';
+  //   update();
+
+  //   final result = await GetWishlist(sl())(userId);
+  //    isLoading=false;
+  //   result.fold(
+  //     (failure) {
+  //       errorMessage = 'Failed to fetch wishlist. Please try again later.';
+  //       userWishlist = null;
+  //     },
+  //     (wishlist) {
+  //         userWishlist = wishlist;
+  //         errorMessage="";
+  //     },
+  //   );
+  //   update();
+
+  //   isLoading = false;
+  //   update();
+  //   return userWishlist!=null;
+  // }
+// Get wishlist by user ID
   Future<bool> getWishlistByUserId(String userId) async {
     isLoading = true;
-    errorMessage = '';
     update();
+    print('Fetching wishlist for userId: $userId');
+    final res = await GetWishlist(sl())(userId:userId);
+    print('API call complete, result: $res');
+    isLoading = false;
 
-    final result = await GetWishlist(sl())(userId);
-     isLoading=false;
-    result.fold(
+    res.fold(
       (failure) {
-        errorMessage = 'Failed to fetch wishlist. Please try again later.';
-        userWishlist = null;
+        errorMessage = 'Failed to load wishlist';
+        print('Error: ${failure.toString()}');
+        update();
+        return false;
       },
       (wishlist) {
-          userWishlist = wishlist;
-          errorMessage="";
+        userWishlist = wishlist;
+
+        print('Fetched Wishlist: $userWishlist');
+        print('Wishlist product IDs: ${userWishlist?.pizzas}');
+
+        errorMessage = '';
+        update();
+        return true;
       },
     );
-    update();
-
-    isLoading = false;
-    update();
-    return userWishlist!=null;
+    return true;
   }
 
   // Add a pizza to the wishlist

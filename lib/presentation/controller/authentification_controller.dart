@@ -4,6 +4,7 @@ import 'package:front/core/utils/string_const.dart';
 import 'package:front/di.dart';
 import 'package:front/domain/entities/token.dart';
 import 'package:front/domain/entities/user.dart';
+import 'package:front/domain/usecases/cart_usecases/create_cart.dart';
 import 'package:front/domain/usecases/user_usecases/clear_user_image.dart';
 import 'package:front/domain/usecases/user_usecases/forget_password.dart';
 import 'package:front/domain/usecases/user_usecases/get_user_by_id.dart';
@@ -15,11 +16,15 @@ import 'package:front/domain/usecases/user_usecases/update_image.dart';
 import 'package:front/domain/usecases/user_usecases/update_password.dart';
 import 'package:front/domain/usecases/user_usecases/update_user.dart';
 import 'package:front/domain/usecases/user_usecases/verify_otp.dart';
+import 'package:front/domain/usecases/wishlist_usecases/create_wishlist.dart';
+import 'package:front/presentation/controller/cart_controller.dart';
+import 'package:front/presentation/controller/wishlist_controller.dart';
 import 'package:front/presentation/screens/Home_pizza_Screen.dart';
 import 'package:front/presentation/screens/login_page.dart';
 import 'package:front/presentation/screens/main_page.dart';
 import 'package:front/presentation/screens/otp_screen.dart';
 import 'package:front/presentation/screens/reset_password_screen.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -126,12 +131,16 @@ class AuthenticationController extends GetxController {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+        return message;
       },
       (success) {
         // On success
         userId = success; // Assuming success returns user ID
         message = "Account created successfully!";
-        
+        final CreateOrGetCartUseCase createCartUseCase = sl<CreateOrGetCartUseCase>();
+         createCartUseCase(userId: userId);
+         final CreateWishListUseCase createWishListUseCase = sl<CreateWishListUseCase>();
+         createWishListUseCase(userId: userId);
 
         // Clear input fields
         email.clear();
@@ -203,9 +212,19 @@ class AuthenticationController extends GetxController {
       token = r;
       email.clear();
       password.clear();
+         final userRes =await getCurrentUser(r.userId);
+         final CartController cartController=Get.find();
+        await cartController.getCartByUser(currentUser.id!);
+         final WishlistController wishlistController=Get.find();
+         print(currentUser.id);
+        
+        await wishlistController.getWishlistByUserId(currentUser.id!);
+        
+
 
         return Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const MainPage()));
+
       // await getOneUser(r.userId).then((value) async {
       //   final WishListController wishListController = Get.find();
       //   final CartController cartController = Get.find();

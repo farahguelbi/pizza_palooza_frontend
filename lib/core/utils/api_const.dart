@@ -2,7 +2,7 @@
 
 
 class ApiConst {
-  static const baseUrl = 'http://192.168.1.14:5000/api';
+  static const baseUrl = 'http://192.168.9.49:5000/api';
 
   // Authentication APIs
   static const RegisterUser = '$baseUrl/users/register'; 
@@ -23,7 +23,9 @@ class ApiConst {
   // Wishlist APIs
   static const addToWishlist = '$baseUrl/wishlist/add';
   static const removeFromWishlist = '$baseUrl/wishlist/remove';
-  static String getWishlist  (String userId) => '$baseUrl/wishlist/$userId';
+  // static String getWishlist  (String userId) => '$baseUrl/wishlist/$userId';
+    static String getWishlist = '$baseUrl/wishlist';
+
   static const createWishList = '$baseUrl/wishList/create';
 
 
@@ -33,13 +35,18 @@ class ApiConst {
   static const  getIngredientsByLayer = '$baseUrl/ingredients/by-layer';
 
   // Command APIs
-  static const createCommand = '$baseUrl/command/checkout';
-  static String getCommandById(String commandId) => '$baseUrl/command/$commandId';
-  static String getAllCommands(String userId) => '$baseUrl/commands?userId=$userId';
-  static const cancelCommand = '$baseUrl/command/cancel';
-  static const completeCommand = '$baseUrl/command/complete';
-  static const changePaymentStatus = '$baseUrl/command/payment-status';
-  static const changePaymentMethod = '$baseUrl/command/change-payment-method';
+  // static const createCommand = '$baseUrl/command/checkout';
+  // static String getCommandById(String commandId) => '$baseUrl/command/$commandId';
+  // static String getAllCommands(String userId) => '$baseUrl/commands?userId=$userId';
+  // static const cancelCommand = '$baseUrl/command/cancel';
+  // static const completeCommand = '$baseUrl/command/complete';
+  // static const changePaymentStatus = '$baseUrl/command/payment-status';
+  // static const changePaymentMethod = '$baseUrl/command/change-payment-method';
+   static const String createCommand = "'$baseUrl/commands";
+  static const String getAllCommands = "'$baseUrl/commands";
+  static const String getCommandById = "'$baseUrl/commands/";
+  static const String updateCommand = "'$baseUrl/commands/";
+  static const String deleteCommand = "'$baseUrl/commands/";
 
   // Cart APIs
   static const createOrGetCart = '$baseUrl/cart/cart';

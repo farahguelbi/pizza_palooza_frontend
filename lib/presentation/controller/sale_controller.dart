@@ -8,7 +8,7 @@ import '../../data/models/sale_model.dart';
 import '../../di.dart';
 
 class SaleController extends GetxController {
-   List<SaleModel> sales = [];
+   List<String> sales = [];
   SaleModel? selectedSale;
   bool isLoading = false;
   String errorMessage = '';
@@ -69,13 +69,13 @@ class SaleController extends GetxController {
 //     update();
 //   }
 // }
-Future<Sale?> createSale(
+Future<String> createSale(
     String userID, String pizzaId, int quantityPizza, double totalPrice) async {
   isLoading = true;
   errorMessage = '';
   update();
-
-  try {
+String res='';
+  
     // Call the CreateSale use case and get the result
     final result = await CreateSale(sl())(
       userID: userID,
@@ -85,26 +85,20 @@ Future<Sale?> createSale(
     );
 
     // Handle the result using fold
-    return result.fold(
-      (failure) {
+  result.fold(
+      (failure){
         errorMessage = 'Failed to create sale: ${failure.toString()}';
-        print(errorMessage);
-        return null; // Return null if the creation fails
       },
       (sale) {
-        sales.add(sale as SaleModel); // Cast the Sale entity to SaleModel
-        print("Sale created successfully with ID: ${sale.id}");
+        sales.add(sale); // Cast the Sale entity to SaleModel
+        // print("Sale created successfully with ID: ${sale.id}");
+        res=sale;
         return sale; // Return the created Sale object
       },
+      
     );
-  } catch (e) {
-    print("Error creating sale: $e");
-    errorMessage = 'Unexpected error: $e';
-    return null; // Return null in case of an exception
-  } finally {
-    isLoading = false;
-    update();
-  }
+    return res;
+
 }
 
 
@@ -198,23 +192,23 @@ Future<SaleModel?> getSaleById(String saleId) async {
   update(); // Notify UI that loading started
 
   try {
-    print("🔄 Calling API to get sale with ID: $saleId...");
+    // print("🔄 Calling API to get sale with ID: $saleId...");
     final result = await GetSaleById(sl()).call(saleId);
 
     return result.fold(
       (failure) {
-        print("❌ Failed to fetch sale.");
+        // print("❌ Failed to fetch sale.");
         errorMessage = 'Failed to fetch sale.';
         selectedSale = null;
         return null;
       },
       (sale) {
         if (sale is SaleModel) {
-          print("✅ API Response - Sale Found: ${sale.toJson()}");
+          // print("✅ API Response - Sale Found: ${sale.toJson()}");
           selectedSale = sale;
           return sale;
         } else {
-          print("⚠️ Unexpected data format.");
+          // print("⚠️ Unexpected data format.");
           errorMessage = 'Unexpected data format.';
           selectedSale = null;
           return null;
@@ -222,7 +216,7 @@ Future<SaleModel?> getSaleById(String saleId) async {
       },
     );
   } catch (e) {
-    print("❌ Unexpected error fetching sale: $e");
+    // print("❌ Unexpected error fetching sale: $e");
     errorMessage = 'Unexpected error: $e';
     selectedSale = null;
     return null;
@@ -238,10 +232,10 @@ Future<void> addMultipleSidesToSale(String saleId, List<SaleSide> sides, double 
   update(); // Notify UI
 
   try {
-    print("Calling addMultipleSidesToSale...");
-    print("Sale ID: $saleId");
-    print("Sides to add: ${sides.map((s) => {'sideId': s.sideId, 'quantity': s.quantity}).toList()}");
-    print("Total Price: $totalPrice");
+    // print("Calling addMultipleSidesToSale...");
+    // print("Sale ID: $saleId");
+    // print("Sides to add: ${sides.map((s) => {'sideId': s.sideId, 'quantity': s.quantity}).toList()}");
+    // print("Total Price: $totalPrice");
 
     final result = await AddMultipleSides(sl())(
       saleId: saleId,
@@ -252,7 +246,7 @@ Future<void> addMultipleSidesToSale(String saleId, List<SaleSide> sides, double 
     result.fold(
       (failure) {
         errorMessage = 'Échec de l’ajout des sides.';
-        print("Failed to add sides: $failure");
+        // print("Failed to add sides: $failure");
       },
       (_) {
         errorMessage = ""; // No error means success
@@ -261,7 +255,7 @@ Future<void> addMultipleSidesToSale(String saleId, List<SaleSide> sides, double 
     );
   } catch (e) {
     errorMessage = 'Erreur inattendue: $e';
-    print("Unexpected error in addMultipleSidesToSale: $e");
+    // print("Unexpected error in addMultipleSidesToSale: $e");
   } finally {
     isLoading = false; // Disable loading state
     update(); // Notify UI

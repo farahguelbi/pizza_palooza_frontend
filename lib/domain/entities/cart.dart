@@ -1,11 +1,14 @@
 import 'package:equatable/equatable.dart';
+import 'package:front/data/models/sale_model.dart';
 import 'sale.dart';
 import 'user.dart';
 
 class Cart extends Equatable {
   final String id; 
-  final User user; 
-  final List<Sale> sales; 
+  // final User user; 
+  final String user; 
+
+  final List<SaleModel> sales; 
   final double cartTotal; 
 
   const Cart({

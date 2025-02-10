@@ -8,7 +8,9 @@ class CreateCommand {
 
   CreateCommand(this.repository);
 
-  Future<Either<Failure, Unit>> call(Command command) async {
-    return await repository.createCommand(command);
+  // Future<Either<Failure, Unit>> call(Command command) async {
+  //   return await repository.createCommand(command);
+    Future<Either<String, Command>> call(Map<String, dynamic> commandData) async {
+    return await repository.createCommand(commandData);
   }
 }

@@ -9,7 +9,7 @@ class CreateOrGetCartUseCase {
 
   CreateOrGetCartUseCase(this.repository);
   
-Future<Either<Failure, Cart>> call(String userId) async {
+Future<Either<Failure, Cart>> call({required String userId})  {
     return repository.createOrGetCart(userId);
   }
 }

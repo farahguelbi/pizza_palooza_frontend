@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import '../../models/sale_model.dart';
 
 abstract class SaleRemoteDataSource {
-  Future<SaleModel> createSale( String userID,
+  Future<String> createSale( String userID,
      String pizzaId,
    int quantityPizza,double totalPrice);
   
@@ -33,7 +33,7 @@ class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
     return await SettingsLocalDataSourcImpl().loadLocale();
   }
   @override
-  Future<SaleModel> createSale(  String userID,String pizzaId,int quantityPizza,double totalPrice) async {
+  Future<String> createSale(  String userID,String pizzaId,int quantityPizza,double totalPrice) async {
     final response = await http.post(
       Uri.parse(ApiConst.createSale),
       headers: {'Content-Type': 'application/json'},
@@ -51,7 +51,7 @@ body: json.encode({
     final saleData = data['sale'];
     print("Parsed Sale Data: $saleData");
 
-    return SaleModel.fromJson(saleData);
+    return saleData['_id'];
   } else {
     // Handle error cases by throwing an exception
     throw Exception('Failed to create sale: ${response.body}');
@@ -67,6 +67,7 @@ body: json.encode({
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
+    
       return jsonResponse.map((data) => SaleModel.fromJson(data)).toList();
     } else {
       throw ServerException();
@@ -75,14 +76,19 @@ body: json.encode({
 
   @override
   Future<SaleModel> getSaleById(String id) async {
+          // print('thisid $id');
+
     final response = await http.get(
       Uri.parse(ApiConst.getSaleById(id)),
+
       headers: {'Content-Type': 'application/json'},
     );
 
     if (response.statusCode == 200) {
+      // print('thiss ${response.body}');
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      return SaleModel.fromJson(jsonResponse);
+      // print('this12 $jsonResponse');
+      return SaleModel.fromJson(jsonResponse['sale']);
     } else {
       throw ServerException();
     }

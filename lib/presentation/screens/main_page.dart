@@ -22,11 +22,13 @@ class _MainPageState extends State<MainPage> {
     HomeScreen(),
     WishlistPage(),
     AddScreen(),
-    Cartscreen(),
+    CartScreen(),
   ];
   void _onTap(int index) {
+        print('page :$_currentIndex');
     setState(() {
-      _currentIndex = index; // Update the current index
+      _currentIndex = index; 
+
     });}
 
   @override

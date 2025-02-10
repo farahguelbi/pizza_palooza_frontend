@@ -18,34 +18,37 @@ class SaleModel extends Sale {
           sides: sides,
         );
 
-  // factory SaleModel.fromJson(Map<String, dynamic> json) {
-  //   return SaleModel(
-  //     id: json['_id'],
-  //     pizzaId: json['pizzaId'] ?? '',
-  //     pizzaQuantity: json['quantitypizza'] ?? 0,
-  //     userId: json['userId'] ?? '',
-  //     totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
+  factory SaleModel.fromJson(Map<String, dynamic> json) {
+    return SaleModel(
+      id: json['_id'],
+      // pizzaId: json['pizzaId']['_id'] ?? '',
+            pizzaId: json['pizzaId'] is Map<String, dynamic> 
+          ? json['pizzaId']['_id'] ?? ''  // ✅ Assurer que nous extrayons seulement l'ID
+          : json['pizzaId'] ?? '',
+      pizzaQuantity: json['quantitypizza'] ?? 0,
+      userId: json['userId'] ?? '',
+      totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
       
-  //     sides: (json['sides'] as List<dynamic>? ?? [])
-  //         .map((sideJson) => SaleSideModel.fromJson(sideJson))
-  //         .toList(),
-  //   );
-  // }
-factory SaleModel.fromJson(Map<String, dynamic> json) {
-  print("📌 Parsing Sale JSON: $json"); // Debugging
+      sides: (json['sides'] as List<dynamic>? ?? [])
+          .map((sideJson) => SaleSideModel.fromJson(sideJson))
+          .toList(),
+    );
+  }
+// factory SaleModel.fromJson(Map<String, dynamic> json) {
+//   print("📌 Parsing Sale JSON: $json"); // Debugging
 
-  // Extract sale object if it exists
-  final saleData = json.containsKey('sale') ? json['sale'] : json;
+//   // Extract sale object if it exists
+//   final saleData = json.containsKey('sale') ? json['sale'] : json;
 
-  return SaleModel(
-    id: saleData['_id'] ?? '',
-    pizzaId: saleData['pizzaId']?['_id'] ?? '', // Extract pizza ID correctly
-    pizzaQuantity: saleData['quantitypizza'] ?? 0,
-    userId: saleData['userId'] ?? '',
-    totalPrice: (saleData['totalPrice'] is num) ? (saleData['totalPrice'] as num).toDouble() : 0.0,
-    sides: (saleData['sides'] as List<dynamic>).map((side) => SaleSideModel.fromJson(side)).toList(),
-  );
-}
+//   return SaleModel(
+//     id: saleData['_id'] ?? '',
+//     pizzaId: saleData['pizzaId']?['_id'] ?? '', // Extract pizza ID correctly
+//     pizzaQuantity: saleData['quantitypizza'] ?? 0,
+//     userId: saleData['userId'] ?? '',
+//     totalPrice: (saleData['totalPrice'] is num) ? (saleData['totalPrice'] as num).toDouble() : 0.0,
+//     sides: (saleData['sides'] as List<dynamic>).map((side) => SaleSideModel.fromJson(side)).toList(),
+//   );
+// }
 
   Map<String, dynamic> toJson() {
     return {
@@ -73,7 +76,10 @@ class SaleSideModel extends SaleSide {
   /// Convertir un JSON en une instance de `SaleSideModel`
   factory SaleSideModel.fromJson(Map<String, dynamic> json) {
     return SaleSideModel(
-      sideId: (json['sideId']as String),
+      // sideId: (json['sideId']as String),
+        sideId: json['sideId'] is String
+          ? json['sideId'] // Si `sideId` est directement une String
+          : json['sideId']['_id'] ?? '',
       quantity: json['quantity'],
     );
   }

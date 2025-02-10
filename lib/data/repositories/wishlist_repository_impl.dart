@@ -32,7 +32,7 @@ class WishlistRepositoryImpl implements WishlistRepository {
     }
   }
  @override
-  Future<Either<Failure, Wishlist>> getWishlist(String userId) async {
+  Future<Either<Failure, Wishlist?>> getWishlist({required String userId}) async {
     try {
       final wishlist = await wishlistRemoteDataSource.getWishlist(userId: userId);
       return Right(wishlist);
