@@ -43,12 +43,16 @@ _safeUpdate();
 _safeUpdate();
     res.fold(
       (failure) {
+              print("Failed to fetch side: ${failure.message}");
+
         msg = 'Product not found';
         selectedSide=null;
         _safeUpdate();
         return false;
       },
       (side) {
+              print("Fetched side: ${side.name}");
+
         selectedSide = side;
         msg = '';
        _safeUpdate();

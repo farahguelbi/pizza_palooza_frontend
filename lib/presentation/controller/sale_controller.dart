@@ -70,7 +70,7 @@ class SaleController extends GetxController {
 //   }
 // }
 Future<String> createSale(
-    String userID, String pizzaId, int quantityPizza, double totalPrice) async {
+    String userID, String pizzaId, int quantityPizza, double totalPrice,String pizzaType) async {
   isLoading = true;
   errorMessage = '';
   update();
@@ -82,6 +82,7 @@ String res='';
       pizzaId: pizzaId,
       quantityPizza: quantityPizza,
       totalPrice: totalPrice,
+      pizzaType: pizzaType,
     );
 
     // Handle the result using fold

@@ -25,7 +25,7 @@ class CreatePizza {
 
   CreatePizza(this.repository);
 
-  Future<Either<Failure, Unit>> call(
+  Future<Either<Failure, String>> call(
     String selectedSize,
     List<Map<String,dynamic>> ingredients,String userID , double price
   ) async {

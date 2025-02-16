@@ -5,7 +5,7 @@ import 'user_model.dart';
 class CommandModel extends Command {
   const CommandModel({
     required String id,
-    required UserModel user,
+    required String user,
     required String address,
     required  List<String> saleIds,
     required String orderStatus,

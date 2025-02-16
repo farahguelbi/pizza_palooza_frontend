@@ -7,8 +7,11 @@ class PizzaCustom extends Equatable {
   final String id;
   final String name;
   final double price;
+  
   final List<Map<String,dynamic>> ingredients;
-  final PizzaSize size;
+  final String size;
+    final String image; 
+
 
   PizzaCustom({
     required this.id,
@@ -16,10 +19,12 @@ class PizzaCustom extends Equatable {
     required this.price,
     required this.ingredients,
     required this.size,
+        required this.image,
+
   });
   
   @override
-  List<Object?> get props => [id,name,price,ingredients,size];
+  List<Object?> get props => [id,name,price,ingredients,size,image];
 
 
 }

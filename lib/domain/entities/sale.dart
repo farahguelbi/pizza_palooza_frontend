@@ -8,7 +8,7 @@ class Sale extends Equatable {
   final String userId;
   final double totalPrice; 
   final List<SaleSide> sides; 
- 
+ final String pizzaType; 
 
 const Sale({
     required this.id,
@@ -17,6 +17,7 @@ const Sale({
     required this.userId,
     required this.totalPrice,
     required this.sides,
+    required this.pizzaType,
   });
 
   @override
@@ -27,6 +28,7 @@ const Sale({
         userId,
         totalPrice,
         sides,
+        pizzaType,
       
       ];
 }

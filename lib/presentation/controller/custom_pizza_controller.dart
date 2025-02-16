@@ -140,6 +140,8 @@ class CustomPizzaController extends GetxController {
   PizzaCustom? pizza;
 List<PizzaCustom> allPizzas = [];
   List<PizzaCustom> pizzasList = [];
+   String? createdPizzaId; 
+   
 //    List<Ingredient> selectedIngredients = [];
 //  Map<String, int> ingredientQuantities = {};
 
@@ -169,37 +171,50 @@ List<PizzaCustom> allPizzas = [];
     );
     return true;
   }
-Future<bool> createCustomPizza(
-  String selectedSize,
-  List<Map<String,dynamic>> ingredients,String userID , double price
-) async {
+ // Creates a custom pizza and returns the pizza ID
+Future<String?> createCustomPizza({
+  required String selectedSize,
+  required List<Map<String, dynamic>> ingredients,
+  required String userID,
+  required double price,
+}) async {
   isLoading = true;
-  update();
+  update(); // Notify listeners
 
   try {
-    final res = await CreatePizza(sl())(selectedSize, ingredients,userID,price);
+    // Call the use case to create the pizza
+    final result = await CreatePizza(sl())(
+      selectedSize,
+      ingredients,
+      userID,
+      price,
+    );
 
     isLoading = false;
 
-    res.fold(
+    return result.fold(
       (failure) {
-        errorMessage = 'Failed to create custom pizza';
-        update();
-        print("Error creating pizza: $failure");
-        return false;
+        // Handle failure
+        errorMessage = 'Failed to create custom pizza: ${failure.message}';
+        update(); // Notify listeners
+        print("Error creating pizza: $failure"); // Log error
+        return null; // Return null for failure
       },
-      (CreatedPizza) {
-        errorMessage = '';
-        update();
-        return true;
+      (pizzaId) {
+        // Handle success
+        createdPizzaId = pizzaId; // Store the created pizza ID
+        errorMessage = ''; // Clear error message
+        update(); // Notify listeners
+        return pizzaId; // Return the pizza ID for success
       },
     );
-    return true;
   } catch (e) {
+    // Handle unexpected errors
     isLoading = false;
-    update();
-    print("Error during API call: $e");
-    return false;
+    errorMessage = 'An unexpected error occurred: $e';
+    update(); // Notify listeners
+    print("Error during API call: $e"); // Log unexpected errors
+    return null; // Return null for failure
   }
 }
 
@@ -207,9 +222,10 @@ Future<bool> createCustomPizza(
   Future<bool> getCustomPizzaById(String id) async {
     isLoading = true;
     update();
+  print("Fetching CustomPizza with ID: $id from /api/pizzaCustom/");
 
     final res = await GetCustomPizzaById(sl())(id); 
-
+print("API Response: $res");
     isLoading = false;
     update();
 
@@ -218,12 +234,16 @@ Future<bool> createCustomPizza(
         errorMessage = 'Pizza not found';  // Error message when pizza is not found
         pizza = null; // Clear current pizza if not found
         update();
+              print("Failed to fetch CustomPizza: ${failure.message}");
+
         return false;
       },
       (foundPizza) {
         pizza = foundPizza; 
         errorMessage = '';
         update();
+              print("CustomPizza fetched: ${pizza?.name}");
+
         return true;
       },
     );

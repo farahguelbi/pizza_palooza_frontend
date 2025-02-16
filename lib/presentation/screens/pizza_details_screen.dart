@@ -273,7 +273,7 @@ class _PizzaDetailsScreenState extends State<PizzaDetailsScreen> {
                      onPressed: () async {
   // try {
   
-   final sale= await saleController.createSale(currentUserId, widget.pizza.id, quantity, totalPrice);
+   final sale= await saleController.createSale(currentUserId, widget.pizza.id, quantity, totalPrice,'Pizza');
    print('SALE1 ${sale}');
  final saleId = sale;
  print('id $saleId');

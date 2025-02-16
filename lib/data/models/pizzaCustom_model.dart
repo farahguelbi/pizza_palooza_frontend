@@ -6,15 +6,31 @@ class PizzacustomModel extends PizzaCustom {
     required String id,
     required String name,
     required double price,
-    required PizzaSize size,
+    required String size,
     required List<Map<String,dynamic>> ingredients,
+        required String image,
+
   }) : super(
           id: id,
           name: name,
           price: price,
           ingredients: ingredients,
           size: size,
+          image: image,
+
         );
+ factory PizzacustomModel.fromJson(Map<String, dynamic> json) {
+    return PizzacustomModel(
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      price: double.parse(json['price'].toString()),
+    size: json['size'] ?? 'medium', // Adjust based on your model
+      ingredients: (json['ingredients'] as List)
+          .map((ingredientJson) => ingredientJson as Map<String, dynamic>)
+          .toList(),
+            image: json['image']??'',
+    );
+  }
 
   // // Method to convert JSON into a PizzacustomModel instance
   // factory PizzacustomModel.fromJson(Map<String, dynamic> json) {
@@ -35,8 +51,9 @@ class PizzacustomModel extends PizzaCustom {
      
       'name': name,
       'price': price,
-      'size': size.toJson(),
+      'size': size,
       'ingredients':ingredients,
+      
     };
   }
 }

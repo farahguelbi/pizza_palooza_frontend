@@ -2,6 +2,8 @@ import '../../domain/entities/sale.dart';
 import 'side_model.dart';
 
 class SaleModel extends Sale {
+  // final String? customPizzaId;
+
   const SaleModel({
     required String? id,
     required String pizzaId,
@@ -9,6 +11,8 @@ class SaleModel extends Sale {
     required String userId,
     required double totalPrice,
     required List<SaleSideModel> sides,
+    //  this.customPizzaId,
+    required String pizzaType,
   }) : super(
           id: id,
           pizzaId: pizzaId,
@@ -16,6 +20,7 @@ class SaleModel extends Sale {
           userId: userId,
           totalPrice: totalPrice,
           sides: sides,
+          pizzaType: pizzaType,
         );
 
   factory SaleModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +37,8 @@ class SaleModel extends Sale {
       sides: (json['sides'] as List<dynamic>? ?? [])
           .map((sideJson) => SaleSideModel.fromJson(sideJson))
           .toList(),
+          //  customPizzaId: json['customPizzaId']
+      pizzaType: json['pizzaType'],
     );
   }
 // factory SaleModel.fromJson(Map<String, dynamic> json) {
@@ -58,8 +65,11 @@ class SaleModel extends Sale {
       'userId': userId,
       'totalPrice': totalPrice,
       'sides': sides.map((side) => (side as SaleSideModel).toJson()).toList(),
+      'pizzaType':pizzaType,
+      // 'customPizzaId': customPizzaId,
     };
   }
+  //  bool get isCustomPizza => customPizzaId != null;
 }
 
 

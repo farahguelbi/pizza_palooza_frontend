@@ -70,11 +70,11 @@ class SaleRepositoryImpl implements SaleRepository {
   }
   
   @override
-  Future<Either<Failure, String>> createSale({required String userID, required String pizzaId, required int quantityPizza,required totalPrice}) async {
+  Future<Either<Failure, String>> createSale({required String userID, required String pizzaId, required int quantityPizza,required totalPrice,required pizzaType}) async {
    try {
      
     
-      final sale = await saleRemoteDataSource.createSale(userID,pizzaId,quantityPizza,totalPrice);
+      final sale = await saleRemoteDataSource.createSale(userID, pizzaId, quantityPizza, totalPrice,pizzaType );
       return Right(sale);
     } catch (e) {
       return Left(ServerFailure());

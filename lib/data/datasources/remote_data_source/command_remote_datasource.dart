@@ -24,23 +24,87 @@ class CommandRemoteDataSourceImpl implements CommandRemoteDataSource {
 
   CommandRemoteDataSourceImpl();
 
+// @override
+// Future<CommandModel> createCommand(Map<String, dynamic> commandData) async {
+//   final response = await http.post(
+//     Uri.parse(ApiConst.createCommand),
+//     headers: {'Content-Type': 'application/json'},
+//     body: jsonEncode(commandData),
+//   );
+
+//   if (response.statusCode == 201) {
+//     final data = jsonDecode(response.body);
+//     return CommandModel.fromJson(data); // Assuming backend returns the created command
+//   } else {
+//     throw ServerException();
+//   }
+// }
+
 @override
 Future<CommandModel> createCommand(Map<String, dynamic> commandData) async {
-  final response = await http.post(
-    Uri.parse(ApiConst.createCommand),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(commandData),
-  );
+  try {
 
-  if (response.statusCode == 201) {
-    final data = jsonDecode(response.body);
-    return CommandModel.fromJson(data); // Assuming backend returns the created command
-  } else {
+    // Ensure the saleId field is a single value
+    if (commandData.containsKey('saleId')) {
+      if (commandData['saleId'] is List) {
+        // If saleId is an array, use the first value
+        commandData['saleId'] = commandData['saleId'].first;
+      }
+    }
+
+    // Log the request data for debugging
+    print('Request Data: ${jsonEncode(commandData)}');
+
+    // Make the HTTP POST request
+    print('Making HTTP POST request...');
+    final response = await http.post(
+      Uri.parse(ApiConst.createCommand),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(commandData),
+    );
+
+    // Log the response status code
+    print('Response Status Code: ${response.statusCode}');
+
+    // Check the response status code
+    if (response.statusCode == 201) {
+      // Log the response body
+      print('Response Body: ${response.body}');
+
+      // Parse the response body
+      print('Parsing response body...');
+      final data = jsonDecode(response.body);
+
+      // Log the parsed data
+      print('Parsed Data: $data');
+
+      // Convert JSON to CommandModel
+      print('Creating CommandModel from JSON...');
+      return CommandModel.fromJson(data); // Assuming backend returns the created command
+    } else {
+      // Log the error response body
+      print('Error Response Body: ${response.body}');
+
+      // Throw an exception for non-201 status codes
+      throw ServerException();
+    }
+  } on FormatException catch (e) {
+    // Log URL parsing errors
+    print('FormatException: ${e.message}');
     throw ServerException();
+  } on http.ClientException catch (e) {
+    // Log network-related errors
+    print('ClientException: ${e.message}');
+    throw ServerException();
+  } on Exception catch (e) {
+    // Log any other exceptions
+    print('Unexpected Exception: ${e.toString()}');
+    throw ServerException();
+  } finally {
+    // Log the end of the process
+    print('Command creation process completed.');
   }
 }
-
-
 
 
   @override

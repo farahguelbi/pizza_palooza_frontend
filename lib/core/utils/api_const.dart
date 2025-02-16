@@ -1,8 +1,5 @@
-
-
-
 class ApiConst {
-  static const baseUrl = 'http://192.168.9.49:5000/api';
+  static const baseUrl ='http://192.168.108.49:5000/api';
 
   // Authentication APIs
   static const RegisterUser = '$baseUrl/users/register'; 
@@ -42,11 +39,11 @@ class ApiConst {
   // static const completeCommand = '$baseUrl/command/complete';
   // static const changePaymentStatus = '$baseUrl/command/payment-status';
   // static const changePaymentMethod = '$baseUrl/command/change-payment-method';
-   static const String createCommand = "'$baseUrl/commands";
-  static const String getAllCommands = "'$baseUrl/commands";
-  static const String getCommandById = "'$baseUrl/commands/";
-  static const String updateCommand = "'$baseUrl/commands/";
-  static const String deleteCommand = "'$baseUrl/commands/";
+   static const String createCommand = '$baseUrl/command';
+  static const String getAllCommands = "'$baseUrl/commands'";
+  static const String getCommandById = "'$baseUrl/commands/'";
+  static const String updateCommand = "'$baseUrl/commands/'";
+  static const String deleteCommand = "'$baseUrl/commands/'";
 
   // Cart APIs
   static const createOrGetCart = '$baseUrl/cart/cart';

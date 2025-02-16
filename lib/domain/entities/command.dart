@@ -40,7 +40,7 @@ import 'cart.dart';
 import 'user.dart';
 class Command extends Equatable {
   final String id; 
-  final User user; 
+  final String user; 
   final String address;
   final List<String> saleIds;
   final String orderStatus; 

@@ -94,7 +94,7 @@ final _formKey=GlobalKey<FormState>();
                       child: ElevatedButton(
                         onPressed: ()async {
                           if (_formKey.currentState!.validate()) {
-                              await controller.sendFrogetPasswordRequest(
+                            await controller.sendFrogetPasswordRequest(
                             _emailController, _emailController.text, context);                          }
                         },
                         style: ElevatedButton.styleFrom(

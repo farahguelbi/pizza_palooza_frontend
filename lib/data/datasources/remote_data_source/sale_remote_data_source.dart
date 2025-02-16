@@ -12,7 +12,7 @@ import '../../models/sale_model.dart';
 abstract class SaleRemoteDataSource {
   Future<String> createSale( String userID,
      String pizzaId,
-   int quantityPizza,double totalPrice);
+   int quantityPizza,double totalPrice,String pizzaYype);
   
   Future<List<SaleModel>> getAllSales();
   Future<SaleModel> getSaleById(String id);
@@ -33,7 +33,9 @@ class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
     return await SettingsLocalDataSourcImpl().loadLocale();
   }
   @override
-  Future<String> createSale(  String userID,String pizzaId,int quantityPizza,double totalPrice) async {
+  Future<String> createSale( String userID,String pizzaId,int quantityPizza,double totalPrice,String pizzaType) async {
+      print('🛠️ Sending sale data: {userID: $userID, pizzaId: $pizzaId, quantityPizza: $quantityPizza, totalPrice: $totalPrice, pizzaType: $pizzaType}');
+
     final response = await http.post(
       Uri.parse(ApiConst.createSale),
       headers: {'Content-Type': 'application/json'},
@@ -41,7 +43,9 @@ body: json.encode({
           'userId': userID,
           'pizzaId': pizzaId,
           'quantitypizza': quantityPizza,
-          'totalPrice':totalPrice
+          'totalPrice':totalPrice,
+          'pizzaType':pizzaType,
+       
         }),    );
 
     if (response.statusCode == 201) {

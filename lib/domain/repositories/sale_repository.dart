@@ -13,6 +13,7 @@ abstract class SaleRepository {
     required String pizzaId,
     required int quantityPizza,
     required double totalPrice,
+    required String pizzaType,
 
     });
  
